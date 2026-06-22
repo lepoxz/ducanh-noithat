@@ -1,0 +1,40 @@
+## Ignore Visual Studio temporary files, build results, and user files
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPS/
+[Rr]elease/
+[Rr]eleasePS/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bbin/
+bin/
+obj/
+/bin
+/obj
+
+# Visual Studio files
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / IntelliJ
+.idea/
+*.sln.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# User uploads / local data
+wwwroot/uploads/*
+!wwwroot/uploads/.gitkeep
+app.db
+app.db-journal
+app.db-shm
+app.db-wal

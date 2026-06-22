@@ -1,0 +1,395 @@
+@page "{id:int}"
+@model noithat_ducanh.Pages.ProductDetailModel
+@{
+    ViewData["Title"] = $"{Model.Product.Name} - Nội Thất Đức Anh";
+}
+
+<section class="sec" style="min-height: 80vh; padding-top: 30px;">
+    <!-- Breadcrumbs -->
+    <div style="font-size: 13.5px; color: var(--color-muted); margin-bottom: 30px;">
+        <a href="/Index" style="transition: color 0.15s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'">Trang chủ</a> 
+        <span style="margin: 0 6px; color: var(--color-border);">/</span> 
+        <a href="/Products" style="transition: color 0.15s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'">Sản phẩm</a> 
+        <span style="margin: 0 6px; color: var(--color-border);">/</span> 
+        <a href="/Products?Category=@Model.Product.Category" style="transition: color 0.15s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'">@Model.Product.Category</a> 
+        <span style="margin: 0 6px; color: var(--color-border);">/</span> 
+        <span style="color: var(--color-text); font-weight: 700;">@Model.Product.Name</span>
+    </div>
+
+    <!-- Main Detail Layout (Overlapping Cards Design to avoid standard boring splits) -->
+    <div style="position: relative; background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: 20px; padding: 40px; box-shadow: var(--shadow-card); display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; margin-bottom: 60px;">
+        
+        <!-- Left Image (Floating look) -->
+        <div style="position: relative; border-radius: var(--radius-image); overflow: hidden; border: 1px solid var(--color-border); box-shadow: 0 10px 30px rgba(43,26,20,0.08); aspect-ratio: 4/3; max-width: 100%;">
+            <img src="@Model.Product.ImageUrl" alt="Ảnh chi tiết sản phẩm: @Model.Product.Name" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80'" style="width: 100%; height: 100%; object-fit: cover;" />
+            @if (Model.Product.OldPrice.HasValue && Model.Product.Price.HasValue && Model.Product.OldPrice.Value > 0)
+            {
+                var discount = (int)(100 - (Model.Product.Price.Value / Model.Product.OldPrice.Value * 100));
+                <span class="pbadge" style="top: 20px; left: 20px; font-size: 13px; padding: 6px 14px;">-@discount% GIẢM GIÁ</span>
+            }
+        </div>
+
+        <!-- Right Content & Specs -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <!-- Category badge -->
+                <span style="display: inline-block; background-color: var(--color-surface-alt); color: var(--color-text); padding: 5px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; border: 1px solid var(--color-border);">
+                    📂 @Model.Product.Category
+                </span>
+                
+                <h1 style="font-size: 26px; font-weight: 900; color: var(--color-primary-dark); line-height: 1.3; margin-bottom: 14px;">
+                    @Model.Product.Name
+                </h1>
+
+                <!-- Price block -->
+                <div style="margin-bottom: 24px; display: flex; align-items: baseline; gap: 14px;">
+                    @if (Model.Product.Price.HasValue)
+                    {
+                        <span style="font-size: 26px; font-weight: 900; color: var(--color-primary);">@Model.Product.Price.Value.ToString("N0")đ</span>
+                        @if (Model.Product.OldPrice.HasValue)
+                        {
+                            <span style="font-size: 16px; color: var(--color-muted); text-decoration: line-through;">@Model.Product.OldPrice.Value.ToString("N0")đ</span>
+                        }
+                    }
+                    else
+                    {
+                        <span style="font-size: 24px; font-weight: 900; color: var(--color-primary-dark);">Liên hệ báo giá</span>
+                    }
+                </div>
+
+                <!-- Description -->
+                <p style="color: var(--color-muted); line-height: 1.65; margin-bottom: 28px; font-size: 15px;">
+                    @Model.Product.Description
+                </p>
+
+                <!-- Spec Table (Brutalist style matching aesthetic) -->
+                <h3 style="font-size: 16px; font-weight: 800; color: var(--color-text); margin-bottom: 12px;">Thông số kỹ thuật</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px;">
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: 10px 0; font-weight: 700; color: var(--color-muted); width: 140px;">Chất liệu</td>
+                            <td style="padding: 10px 0; color: var(--color-text); font-weight: 600;">Nhựa nội thất cao cấp (cam kết chống nước 100%, không mối mọt)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: 10px 0; font-weight: 700; color: var(--color-muted);">Màu sắc</td>
+                            <td style="padding: 10px 0; color: var(--color-text); font-weight: 600;">Vân gỗ, Acrylic, xám hiện đại (Tùy chọn theo yêu cầu)</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: 10px 0; font-weight: 700; color: var(--color-muted);">Kích thước</td>
+                            <td style="padding: 10px 0; color: var(--color-text); font-weight: 600;">Khảo sát tận nhà, thiết kế 3D miễn phí, gia công máy CNC chuẩn xác</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--color-border);">
+                            <td style="padding: 10px 0; font-weight: 700; color: var(--color-muted);">Bảo hành</td>
+                            <td style="padding: 10px 0; color: var(--color-text); font-weight: 600;">5 năm chính hãng Đức Anh</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CTA Buttons block -->
+            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                <a href="tel:0773121234" class="btn-acc" style="flex: 1; text-align: center; text-decoration: none; padding: 13px 20px; font-size: 14.5px;">
+                    📞 Gọi Hotline Tư Vấn
+                </a>
+                <a href="https://zalo.me/0773121234" target="_blank" class="btn-ghost" style="flex: 1; text-align: center; text-decoration: none; color: var(--color-primary-dark); border-color: var(--color-primary-dark); padding: 11px 20px; font-size: 14.5px;"
+                   onmouseover="this.style.backgroundColor='var(--color-surface-alt)'" onmouseout="this.style.backgroundColor='transparent'">
+                    💬 Nhắn Zalo Nhận Báo Giá
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-life Installation & Before/After Gallery -->
+    <div style="margin-bottom: 60px;">
+        <div class="sec-hd" style="margin-bottom: 24px;">
+            <h2 class="sec-title" style="font-size: 22px;">Trực Quan Thi Công Thực Tế</h2>
+            <p style="color: var(--color-muted); margin-top: 4px; font-size: 14px;">Mắt thấy tai nghe quy trình sản xuất gia công và hình ảnh lắp đặt trực tiếp tại nhà khách hàng</p>
+        </div>
+
+        <div class="real-install-grid" style="display: grid; gap: 30px; align-items: start;">
+            <!-- Left: Video Installation -->
+            <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-card); height: 100%;">
+                <h3 style="font-size: 15.5px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+                    🎬 Video Lắp Đặt Hoàn Thiện Thực Tế
+                </h3>
+                
+                @if (Model.VideoIds.Any())
+                {
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                        @foreach (var vId in Model.VideoIds)
+                        {
+                            <div style="aspect-ratio: 16/9; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--color-border); box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);">
+                                <iframe 
+                                    width="100%" 
+                                    height="100%" 
+                                    src="https://www.youtube-nocookie.com/embed/@vId" 
+                                    title="Video quy trình thi công lắp đặt" 
+                                    style="border: 0;"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    referrerpolicy="strict-origin-when-cross-origin" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div style="aspect-ratio: 16/9; width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid var(--color-border); box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);">
+                        <iframe 
+                            width="100%" 
+                            height="100%" 
+                            src="https://www.youtube-nocookie.com/embed/n4WbYc2Q1_Q?si=7v0l1gLdD0_oH-b4" 
+                            title="Video quy trình thi công lắp đặt nội thất nhựa Đức Anh" 
+                            style="border: 0;"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" 
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <p style="font-size: 13px; color: var(--color-muted); line-height: 1.5; margin-top: 12px; font-style: italic; text-align: center; margin-bottom: 0;">
+                        Quá trình gia công CNC chính xác tại xưởng và lắp ráp hoàn thiện tại nhà khách hàng
+                    </p>
+                }
+            </div>
+
+            <!-- Right: Installation Images Gallery or Before / After -->
+            <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-card); min-height: 340px; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h3 style="font-size: 15.5px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 14px; display: flex; align-items: center; gap: 6px;">
+                        📸 Hình Ảnh Thực Tế Thi Công
+                    </h3>
+                    
+                    @if (Model.InstallationImages.Any())
+                    {
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; margin-bottom: 16px;">
+                            @foreach (var img in Model.InstallationImages)
+                            {
+                                <div class="install-img-card" onclick="openLightbox('@img')" style="position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--color-border); aspect-ratio: 1/1; cursor: pointer; background: #FAF4E6;">
+                                    <img src="@img" alt="Ảnh thi công lắp đặt" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                                    <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; transition: opacity 0.2s ease;">🔍</div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                            <!-- Before -->
+                            <div style="position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--color-border); aspect-ratio: 1/1;">
+                                <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&q=80" alt="Không gian trước khi thi công - phòng trống thô sơ" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
+                                <span style="position: absolute; bottom: 8px; left: 8px; background-color: rgba(43, 26, 20, 0.85); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px;">TRƯỚC THI CÔNG</span>
+                            </div>
+                            <!-- After -->
+                            <div style="position: relative; border-radius: 8px; overflow: hidden; border: 1.5px solid var(--color-accent); aspect-ratio: 1/1; box-shadow: 0 4px 12px rgba(245, 178, 27, 0.15);">
+                                <img src="@Model.Product.ImageUrl" alt="Hình ảnh sản phẩm hoàn thiện: @Model.Product.Name" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
+                                <span style="position: absolute; bottom: 8px; left: 8px; background-color: var(--color-primary); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; box-shadow: 0 2px 6px rgba(181, 18, 27, 0.35);">ĐỨC ANH HOÀN THIỆN</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div style="background-color: var(--color-background); border-left: 3px solid var(--color-accent); padding: 10px 14px; border-radius: 4px; font-size: 13.5px; line-height: 1.5; color: var(--color-text);">
+                    <strong>💡 Đánh giá khách hàng:</strong> "Rất hài lòng với dịch vụ đo đạc thiết kế 3D miễn phí của xưởng Đức Anh. Sản phẩm thi công bằng máy CNC sắc nét từng chi tiết, cam kết chống mối mọt hoàn toàn khiến tôi rất an tâm."
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dedicated Before/After Construction Section -->
+    @if (Model.Product.Comparisons != null && Model.Product.Comparisons.Any())
+    {
+        <div style="margin-bottom: 60px;">
+            <div class="sec-hd" style="margin-bottom: 24px;">
+                <h2 class="sec-title" style="font-size: 22px; color: var(--color-primary-dark); display: flex; align-items: center; gap: 8px;">
+                    📐 Trước & Sau Thi Công
+                </h2>
+                <p style="color: var(--color-muted); margin-top: 4px; font-size: 14px;">So sánh thực tế giữa hiện trạng công trình thô và không gian hoàn thiện lắp đặt bởi Nội Thất Đức Anh</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+                @foreach (var comp in Model.Product.Comparisons)
+                {
+                    <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 25px; box-shadow: var(--shadow-card);">
+                        @if (!string.IsNullOrEmpty(comp.Description))
+                        {
+                            <h3 style="font-size: 16px; font-weight: 800; color: var(--color-text); margin-bottom: 18px; display: flex; align-items: center; gap: 6px;">
+                                📍 @comp.Description
+                            </h3>
+                        }
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <!-- Before Column -->
+                            <div class="install-img-card" onclick="openLightbox('@comp.BeforeImageUrl')" style="position: relative; border-radius: 12px; overflow: hidden; border: 1.5px solid var(--color-border); aspect-ratio: 4/3; cursor: pointer; background: #fafafa; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                                <img src="@comp.BeforeImageUrl" alt="Hiện trạng trước thi công: @comp.Description" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(40%); transition: transform 0.3s ease;" />
+                                <span style="position: absolute; bottom: 12px; left: 12px; background-color: rgba(43, 26, 20, 0.85); color: #fff; font-size: 11px; font-weight: 800; padding: 5px 10px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">TRƯỚC THI CÔNG</span>
+                                <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; transition: opacity 0.2s ease;">🔍</div>
+                            </div>
+                            
+                            <!-- After Column -->
+                            <div class="install-img-card" onclick="openLightbox('@comp.AfterImageUrl')" style="position: relative; border-radius: 12px; overflow: hidden; border: 2px solid var(--color-accent); aspect-ratio: 4/3; cursor: pointer; background: #fafafa; box-shadow: 0 6px 18px rgba(245, 178, 27, 0.12);">
+                                <img src="@comp.AfterImageUrl" alt="Đức Anh hoàn thiện: @comp.Description" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                                <span style="position: absolute; bottom: 12px; left: 12px; background-color: var(--color-primary); color: #fff; font-size: 11px; font-weight: 800; padding: 5px 10px; border-radius: 4px; letter-spacing: 0.5px; text-transform: uppercase; box-shadow: 0 3px 10px rgba(181, 18, 27, 0.35);">ĐỨC ANH HOÀN THIỆN</span>
+                                <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; transition: opacity 0.2s ease;">🔍</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="lightbox-overlay" onclick="closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+
+    <style>
+        .real-install-grid {
+            grid-template-columns: 1.2fr 1fr;
+        }
+        
+        .install-img-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(181, 18, 27, 0.12);
+        }
+        .install-img-card:hover img {
+            transform: scale(1.06);
+        }
+        .install-img-card:hover div {
+            opacity: 1 !important;
+        }
+
+        /* Lightbox CSS */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.92);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .lightbox-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 85%;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+        }
+        .lightbox-overlay.show .lightbox-content {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .lightbox-close:hover {
+            color: var(--color-accent);
+        }
+        
+        @@media (max-width: 860px) {
+            .real-install-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+
+    <script>
+        function openLightbox(src) {
+            const modal = document.getElementById('lightbox-modal');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>         </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .real-install-grid {
+            grid-template-columns: 1.2fr 1fr;
+        }
+        
+        @@media (max-width: 860px) {
+            .real-install-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+
+    <!-- Related Products Section -->
+    @if (Model.RelatedProducts.Any())
+    {
+        <div style="margin-top: 80px;">
+            <div class="sec-hd">
+                <h2 class="sec-title">Sản Phẩm Tương Tự</h2>
+                <a class="sec-more" href="/Products?Category=@Model.Product.Category">Xem thêm sản phẩm @Model.Product.Category <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            </div>
+            
+            <div class="pgrid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
+                @foreach (var p in Model.RelatedProducts)
+                {
+                    <div class="pcard">
+                        <div class="img">
+                            @if (p.OldPrice.HasValue && p.Price.HasValue && p.OldPrice.Value > 0)
+                            {
+                                var discount = (int)(100 - (p.Price.Value / p.OldPrice.Value * 100));
+                                <span class="pbadge">-@discount%</span>
+                            }
+                            <img src="@p.ImageUrl" alt="Hình ảnh sản phẩm: @p.Name" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80'" />
+                        </div>
+                        <div class="pi">
+                            <h3>@p.Name</h3>
+                            <div class="prow">
+                                @if (p.Price.HasValue)
+                                {
+                                    <span class="pnew">@p.Price.Value.ToString("N0")đ</span>
+                                    @if (p.OldPrice.HasValue)
+                                    {
+                                        <span class="pold">@p.OldPrice.Value.ToString("N0")đ</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="plh">Liên hệ</span>
+                                }
+                            </div>
+                            <a class="pbtn" href="/ProductDetail/@p.Id" style="text-decoration: none;">Xem Chi Tiết</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</section>

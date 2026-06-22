@@ -1,0 +1,155 @@
+@page
+@model noithat_ducanh.Pages.ProductsModel
+@{
+    ViewData["Title"] = "Danh Mục Sản Phẩm - Nội Thất Đức Anh";
+}
+
+<section class="sec" style="min-height: 80vh; padding-top: 40px;">
+    <!-- Catalog Header -->
+    <div class="sec-hd" style="margin-bottom: 30px;">
+        <div>
+            <h2 class="sec-title" style="font-size: 26px;">Danh Mục Sản Phẩm</h2>
+            <p style="color: var(--color-muted); margin-top: 6px; font-size: 14.5px;">Khám phá bộ sưu tập nội thất nhựa cao cấp Đài Loan bền đẹp cho gia đình và văn phòng</p>
+        </div>
+    </div>
+
+    <!-- Search & Filter Layout -->
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 32px; align-items: start; margin-top: 20px;">
+        
+        <!-- Sidebar Filters -->
+        <aside style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-card);">
+            <!-- Search block -->
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 15px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 12px;">Tìm kiếm</h3>
+                <form method="get" style="display: flex; border: 1.5px solid var(--color-border); border-radius: 8px; overflow: hidden; background-color: var(--color-background);">
+                    <input type="text" name="SearchQuery" value="@Model.SearchQuery" aria-label="Tìm kiếm sản phẩm" placeholder="Tìm kiếm sản phẩm…" style="width: 100%; border: none; padding: 8px 12px; font-size: 13.5px; outline: none; background: transparent;" />
+                    @if (!string.IsNullOrEmpty(Model.Category))
+                    {
+                        <input type="hidden" name="Category" value="@Model.Category" />
+                    }
+                    <button type="submit" aria-label="Tìm kiếm" style="background-color: var(--color-primary); border: none; padding: 0 10px; cursor: pointer;">
+                        <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; fill: white;"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Categories block -->
+            <div>
+                <h3 style="font-size: 15px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 12px;">Danh mục</h3>
+                <ul style="display: flex; flex-direction: column; gap: 6px;">
+                    <li>
+                        <a href="/Products@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"?SearchQuery={Model.SearchQuery}")" 
+                           style="display: block; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; transition: background-color 0.2s; @(string.IsNullOrEmpty(Model.Category) ? "background-color: var(--color-primary); color: white;" : "color: var(--color-text);")"
+                           onmouseover="if(this.style.color !== 'white') this.style.backgroundColor='var(--color-surface-alt)'"
+                           onmouseout="if(this.style.color !== 'white') this.style.backgroundColor='transparent'">
+                           Tất Cả
+                        </a>
+                    </li>
+                    @foreach (var cat in Model.Categories)
+                    {
+                        var isActive = Model.Category == cat;
+                        <li>
+                            <a href="/Products?Category=@cat@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" 
+                               style="display: block; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; transition: background-color 0.2s; @(isActive ? "background-color: var(--color-primary); color: white;" : "color: var(--color-text);")"
+                               onmouseover="if(this.style.color !== 'white') this.style.backgroundColor='var(--color-surface-alt)'"
+                               onmouseout="if(this.style.color !== 'white') this.style.backgroundColor='transparent'">
+                               @cat
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Product Grid -->
+        <main>
+            @if (Model.Products.Any())
+            {
+                <div class="pgrid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
+                    @foreach (var p in Model.Products)
+                    {
+                        <div class="pcard">
+                            <div class="img">
+                                @if (p.OldPrice.HasValue && p.Price.HasValue && p.OldPrice.Value > 0)
+                                {
+                                    var discount = (int)(100 - (p.Price.Value / p.OldPrice.Value * 100));
+                                    <span class="pbadge">-@discount%</span>
+                                }
+                                <img src="@p.ImageUrl" alt="Hình ảnh sản phẩm: @p.Name" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80'" />
+                            </div>
+                            <div class="pi">
+                                <h3>@p.Name</h3>
+                                <div class="prow">
+                                    @if (p.Price.HasValue)
+                                    {
+                                        <span class="pnew">@p.Price.Value.ToString("N0")đ</span>
+                                        @if (p.OldPrice.HasValue)
+                                        {
+                                            <span class="pold">@p.OldPrice.Value.ToString("N0")đ</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="plh">Liên hệ</span>
+                                    }
+                                </div>
+                                <a class="pbtn" href="/ProductDetail/@p.Id" style="text-decoration: none;">Xem Chi Tiết</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                @if (Model.TotalPages > 1)
+                {
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 40px; margin-bottom: 20px; flex-wrap: wrap;">
+                        @if (Model.PageNumber > 1)
+                        {
+                            <a href="/Products?PageNumber=@(Model.PageNumber - 1)@(string.IsNullOrEmpty(Model.Category) ? "" : $"&Category={Model.Category}")@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" 
+                               style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--color-border); background-color: var(--color-surface); font-weight: 700; color: var(--color-text); transition: all 0.2s;"
+                               onmouseover="this.style.borderColor='var(--color-primary)'; this.style.color='var(--color-primary)'; this.style.transform='translateY(-2px)';"
+                               onmouseout="this.style.borderColor='var(--color-border)'; this.style.color='var(--color-text)'; this.style.transform='none';">
+                               &larr;
+                            </a>
+                        }
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            if (i == Model.PageNumber)
+                            {
+                                <span style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-primary); color: white; font-weight: 700; box-shadow: 0 4px 10px rgba(181, 18, 27, 0.25);">
+                                    @i
+                                </span>
+                            }
+                            else
+                            {
+                                <a href="/Products?PageNumber=@i@(string.IsNullOrEmpty(Model.Category) ? "" : $"&Category={Model.Category}")@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" 
+                                   style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--color-border); background-color: var(--color-surface); font-weight: 700; color: var(--color-text); transition: all 0.2s;"
+                                   onmouseover="this.style.borderColor='var(--color-primary)'; this.style.color='var(--color-primary)'; this.style.transform='translateY(-2px)';"
+                                   onmouseout="this.style.borderColor='var(--color-border)'; this.style.color='var(--color-text)'; this.style.transform='none';">
+                                    @i
+                                </a>
+                            }
+                        }
+
+                        @if (Model.PageNumber < Model.TotalPages)
+                        {
+                            <a href="/Products?PageNumber=@(Model.PageNumber + 1)@(string.IsNullOrEmpty(Model.Category) ? "" : $"&Category={Model.Category}")@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" 
+                               style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--color-border); background-color: var(--color-surface); font-weight: 700; color: var(--color-text); transition: all 0.2s;"
+                               onmouseover="this.style.borderColor='var(--color-primary)'; this.style.color='var(--color-primary)'; this.style.transform='translateY(-2px)';"
+                               onmouseout="this.style.borderColor='var(--color-border)'; this.style.color='var(--color-text)'; this.style.transform='none';">
+                               &rarr;
+                            </a>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 60px; text-align: center; color: var(--color-muted); box-shadow: var(--shadow-card);">
+                    <p style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">Không tìm thấy sản phẩm nào</p>
+                    <p style="font-size: 14px;">Hãy thử tìm kiếm bằng từ khóa khác hoặc chuyển danh mục lọc.</p>
+                </div>
+            }
+        </main>
+    </div>
+</section>

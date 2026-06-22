@@ -1,0 +1,229 @@
+@inject noithat_ducanh.Data.ApplicationDbContext DbContext
+@using Microsoft.EntityFrameworkCore
+@{
+    var settings = await DbContext.SystemSettings.ToListAsync();
+    var hotline = settings.FirstOrDefault(s => s.Key == "Hotline")?.Value ?? "0773 12 1234";
+    var address = settings.FirstOrDefault(s => s.Key == "Address")?.Value ?? "Ông Bầu, Tỉnh Đồng Tháp";
+    var email = settings.FirstOrDefault(s => s.Key == "Email")?.Value ?? "noithatnhua.ducanh@gmail.com";
+
+    var rawHotline = new string(hotline.Where(char.IsDigit).ToArray());
+
+    var activeSocials = await DbContext.SocialLinks
+        .Where(s => s.IsActive)
+        .OrderBy(s => s.Order)
+        .ToListAsync();
+
+    var zaloLink = activeSocials.FirstOrDefault(s => s.Name.Equals("Zalo", StringComparison.OrdinalIgnoreCase))?.Url ?? $"https://zalo.me/{rawHotline}";
+    var phoneLink = $"tel:{rawHotline}";
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"]</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <partial name="_Favicons" />
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="left">
+      <i>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Hotline: <strong>@hotline</strong>
+      </i>
+      <i>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+        T2–T7 (8:00 – 20:00)
+      </i>
+      <i>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        @address
+      </i>
+    </div>
+    <div class="right">
+      @foreach (var social in activeSocials)
+      {
+        <a class="tb-icon" href="@social.Url" title="@social.Name" aria-label="Theo dõi @social.Name Nội Thất Đức Anh" target="_blank">
+          @Html.Raw(social.Icon)
+        </a>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="wrap">
+    <a class="logo" href="/">
+      <img class="logo-box" src="~/images/logo.png" alt="Biểu tượng Nội Thất Đức Anh" style="object-fit: contain; background: #fff; padding: 4px;" asp-append-version="true" />
+      <div class="logo-txt">
+        <div class="name">NỘI THẤT NHỰA – <span>ĐỨC ANH</span></div>
+        <div class="tag">Bền đẹp mãi với thời gian</div>
+      </div>
+    </a>
+    <nav>
+      <ul>
+        <li><a asp-page="/Index">Trang Chủ</a></li>
+        <li><a href="/Index#about">Giới Thiệu</a></li>
+        <li>
+          <a asp-page="/Products">Nội Thất Gia Đình ▾</a>
+          <ul class="sub">
+            <li><a href="/Products?category=Tủ bếp">Tủ bếp nhựa</a></li>
+            <li><a href="/Products?category=Tủ quần áo">Tủ quần áo nhựa</a></li>
+            <li><a href="/Products?category=Giường ngủ">Giường ngủ nhựa</a></li>
+            <li><a href="/Products?category=Phòng ngủ">Phòng ngủ nhựa</a></li>
+          </ul>
+        </li>
+        <li>
+          <a asp-page="/Products" asp-route-category="Văn phòng">Nội Thất Văn Phòng ▾</a>
+          <ul class="sub">
+            <li><a href="/Products?category=Văn phòng">Bàn ghế văn phòng</a></li>
+            <li><a href="/Products?category=Văn phòng">Tủ hồ sơ nhựa</a></li>
+          </ul>
+        </li>
+        <li><a asp-page="/Projects">Dự Án</a></li>
+        <li><a asp-page="/News">Bài Viết</a></li>
+        <li><a asp-page="/Contact">Liên Hệ</a></li>
+      </ul>
+    </nav>
+    <div class="srch">
+      <form method="get" action="/Products">
+        <input type="text" name="searchQuery" aria-label="Tìm kiếm sản phẩm" placeholder="Tìm sản phẩm…"/>
+        <button type="submit" aria-label="Tìm kiếm">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+        </button>
+      </form>
+    </div>
+    <button class="hamburger" aria-label="Mở Menu di động" onclick="this.closest('.header').classList.toggle('nav-open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+@RenderBody()
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="flogo">
+        <img class="flogo-box" src="~/images/logo.png" alt="Biểu tượng Nội Thất Đức Anh" style="object-fit: contain; background: #fff; padding: 4px;" asp-append-version="true" />
+        <div class="flogo-txt">
+          <div class="name">NỘI THẤT NHỰA – <span>ĐỨC ANH</span></div>
+          <div class="tag">Bền đẹp mãi với thời gian</div>
+        </div>
+      </div>
+      <div class="footer-about">
+        <p>Chuyên thiết kế, sản xuất và lắp đặt nội thất nhựa cao cấp Đài Loan tại Hà Nội. Cam kết chất lượng, bền đẹp, hiện đại với giá cả hợp lý nhất thị trường.</p>
+      </div>
+      <div class="fcontact">
+        <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> @address</p>
+        <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg> Hotline/Zalo: <strong style="color:#fff">@hotline</strong></p>
+        <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email: @email</p>
+      </div>
+      <div class="socials" style="margin-top:16px">
+        @foreach (var social in activeSocials)
+        {
+          <a class="soc" href="@social.Url" title="@social.Name" aria-label="@social.Name Nội Thất Đức Anh" target="_blank">
+            @Html.Raw(social.Icon)
+          </a>
+        }
+      </div>
+    </div>
+    <div>
+      <h4>Sản Phẩm & Dịch Vụ</h4>
+      <ul>
+        <li><a href="/Products?category=Tủ bếp">Tủ bếp nhựa Đài Loan</a></li>
+        <li><a href="/Products?category=Tủ quần áo">Tủ quần áo nhựa</a></li>
+        <li><a href="/Products?category=Giường ngủ">Giường ngủ nhựa</a></li>
+        <li><a href="/Products?category=Phòng ngủ">Nội thất phòng ngủ</a></li>
+        <li><a href="/Products?category=Kệ nhựa">Kệ nhựa Đài Loan</a></li>
+        <li><a href="/Products?category=Văn phòng">Nội thất văn phòng</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Liên Kết Nhanh</h4>
+      <ul>
+        <li><a href="/Index">Trang chủ</a></li>
+        <li><a href="/Index#about">Giới thiệu</a></li>
+        <li><a href="/Products">Nội thất gia đình</a></li>
+        <li><a href="/Products?category=Văn phòng">Nội thất văn phòng</a></li>
+        <li><a href="/Projects">Dự án</a></li>
+        <li><a href="/News">Bài viết</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Hỗ Trợ Khách Hàng</h4>
+      <ul>
+        <li><a href="#">Chính sách bảo hành</a></li>
+        <li><a href="#">Chính sách đổi trả</a></li>
+        <li><a href="#">Hướng dẫn mua hàng</a></li>
+        <li><a href="#">Câu hỏi thường gặp</a></li>
+        <li><a href="#">Tư vấn thiết kế</a></li>
+        <li><a href="#">Báo giá miễn phí</a></li>
+      </ul>
+      <div style="margin-top:24px;background:rgba(255,255,255,.08);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.12)">
+        <p style="font-size:13px;color:#fff;font-weight:700;margin-bottom:10px">📍 Giờ làm việc:</p>
+        <p style="font-size:12.5px;margin-bottom:6px">🕐 Thứ 2 – Thứ 7: 8:00 – 20:00</p>
+        <p style="font-size:12.5px">🕐 Chủ nhật: 9:00 – 17:00</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bot">
+    © 2026 <strong>Nội Thất Nhựa Đức Anh</strong>. Bản quyền thuộc về Đức Anh JSC. Thiết kế bởi Đức Anh Team.
+  </div>
+</footer>
+
+<!-- FLOAT BUTTONS -->
+<div class="floats">
+  <a class="flt flt-phone" href="@phoneLink" title="Gọi ngay" aria-label="Gọi điện thoại trực tiếp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+  </a>
+  @foreach (var social in activeSocials)
+  {
+      var lowerName = social.Name.ToLower();
+      var bgStyle = "";
+      if (lowerName.Contains("zalo"))
+      {
+          bgStyle = "background-color: #0068ff;";
+      }
+      else if (lowerName.Contains("facebook") || lowerName.Contains("fb"))
+      {
+          bgStyle = "background-color: #1877F2;";
+      }
+      else if (lowerName.Contains("youtube") || lowerName.Contains("yt"))
+      {
+          bgStyle = "background-color: #FF0000;";
+      }
+      else if (lowerName.Contains("tiktok"))
+      {
+          bgStyle = "background-color: #010101;";
+      }
+      else if (lowerName.Contains("instagram"))
+      {
+          bgStyle = "background-color: #E1306C;";
+      }
+      else
+      {
+          bgStyle = "background-color: var(--color-primary);";
+      }
+
+      <a class="flt" style="@bgStyle" href="@social.Url" target="_blank" title="@social.Name" aria-label="Liên hệ qua @social.Name">
+          @Html.Raw(social.Icon)
+      </a>
+  }
+</div>
+<div class="backtop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Lên đầu trang" aria-label="Cuộn lên đầu trang">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

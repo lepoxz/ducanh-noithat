@@ -1,0 +1,323 @@
+@page
+@model noithat_ducanh.Pages.Admin.ManageProjectsModel
+@{
+    ViewData["Title"] = Model.IsEditMode ? "Chỉnh Sửa Dự Án" : (Request.Query["action"] == "create" ? "Thêm Dự Án Mới" : "Quản Lý Dự Án");
+}
+
+@if (Model.IsEditMode || Request.Query["action"] == "create")
+{
+    <!-- FULL-PAGE FORM FOR ADD/EDIT -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                @(Model.IsEditMode ? "✍ Chỉnh sửa dự án" : "➕ Tạo dự án mới")
+            </h3>
+            <a href="/Admin/ManageProjects" class="btn-admin btn-admin-secondary">← Quay lại danh sách</a>
+        </div>
+
+        <form method="post" asp-route-editId="@(Model.IsEditMode ? Model.InputProject.Id : null)" id="project-form" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="InputProject.Id" />
+            <textarea asp-for="InputProject.Content" id="hidden-content" style="display:none;"></textarea>
+
+            <div class="form-grid" style="grid-template-columns: 2fr 1fr; gap: 30px;">
+                
+                <!-- Main details (Left Column) -->
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Tên dự án *</label>
+                        <input type="text" asp-for="InputProject.Title" required class="form-control" placeholder="Ví dụ: Dự án chung cư Yên Hòa - Cầu Giấy..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tóm tắt ngắn gọn *</label>
+                        <textarea asp-for="InputProject.Summary" rows="3" required class="form-control" placeholder="Mô tả ngắn gọn dự án hiển thị ở trang danh sách..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Chi tiết thi công / Nội dung dự án *</label>
+                        <div id="editor-wrapper" style="border-radius: var(--radius-md); overflow: hidden; border: 1.5px solid var(--admin-border);">
+                            <div id="editor-container" style="height: 350px; background: white; font-family: inherit; font-size: 14.5px;">
+                                @Html.Raw(Model.InputProject.Content)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side details (Right Column) -->
+                <div style="display: flex; flex-direction: column; gap: 20px; background-color: var(--admin-bg); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--admin-border); height: fit-content;">
+                    <h4 style="font-weight: 700; font-size: 14.5px; color: var(--admin-text-main); border-bottom: 1px solid var(--admin-border); padding-bottom: 10px; margin-bottom: 5px;">Thông tin công trình</h4>
+
+                    <div class="form-group">
+                        <label class="form-label">Loại công trình *</label>
+                        <select asp-for="InputProject.Category" required class="form-control" style="background-color: #ffffff;">
+                            <option value="">-- Chọn loại công trình --</option>
+                            <option value="Chung cư cao cấp">Chung cư cao cấp</option>
+                            <option value="Biệt thự liền kề">Biệt thự liền kề</option>
+                            <option value="Nhà phố hiện đại">Nhà phố hiện đại</option>
+                            <option value="Phòng ngủ gia đình">Phòng ngủ gia đình</option>
+                            <option value="Tủ bếp hiện đại">Tủ bếp hiện đại</option>
+                            <option value="Văn phòng làm việc">Văn phòng làm việc</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Địa điểm thi công</label>
+                        <input type="text" asp-for="InputProject.Location" class="form-control" placeholder="Ví dụ: Cầu Giấy, Hà Nội" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tên khách hàng / Chủ đầu tư</label>
+                        <input type="text" asp-for="InputProject.CustomerName" class="form-control" placeholder="Ví dụ: Anh Hùng, Chị Mai..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Ngày hoàn thành</label>
+                        <input type="date" asp-for="InputProject.CompletionDate" class="form-control" />
+                    </div>
+
+                    <div class="form-group" style="border-top: 1px solid var(--admin-border); padding-top: 15px;">
+                        <label class="form-label" style="font-weight: 750;">🖼️ Ảnh đại diện chính</label>
+                        <div style="margin-bottom: 8px;">
+                            <label class="form-label" style="font-size: 11.5px; color: var(--admin-text-muted);">Tải ảnh mới từ máy tính</label>
+                            <input type="file" name="ProjectImageFile" accept="image/*" class="form-control" />
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size: 11.5px; color: var(--admin-text-muted);">Hoặc đường dẫn ảnh (URL)</label>
+                            <input type="text" asp-for="InputProject.ImageUrl" id="cover-url-input" class="form-control" placeholder="Nhập URL ảnh..." />
+                        </div>
+                        @if (Model.IsEditMode && !string.IsNullOrEmpty(Model.InputProject.ImageUrl))
+                        {
+                            <div style="margin-top: 10px; text-align: center; background: #fff; padding: 6px; border-radius: 4px; border: 1px solid var(--admin-border);">
+                                <img src="@Model.InputProject.ImageUrl" alt="Cover Preview" style="max-height: 80px; max-width: 100%; object-fit: cover;" />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="form-group" style="border-top: 1px solid var(--admin-border); padding-top: 15px;">
+                        <label class="form-label" style="font-weight: 750;">📸 Ảnh thi công phụ (Chọn nhiều ảnh)</label>
+                        <input type="file" name="ExtraImageFiles" accept="image/*" multiple class="form-control" />
+                        
+                        <div style="font-size: 11px; color: var(--admin-primary); margin-top: 6px; line-height: 1.4;">
+                            💡 **Khuyên dùng:** Ảnh tối thiểu 800x600px.
+                        </div>
+
+                        @if (Model.IsEditMode && !string.IsNullOrEmpty(Model.InputProject.ProjectImageUrls))
+                        {
+                            var images = Model.InputProject.ProjectImageUrls.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (images.Any())
+                            {
+                                <div style="margin-top: 12px;">
+                                    <span class="form-label" style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 8px;">Ảnh thi công hiện tại (@images.Length):</span>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px;">
+                                        @for (int i = 0; i < images.Length; i++)
+                                        {
+                                            var img = images[i];
+                                            <div style="position: relative; border-radius: 4px; overflow: hidden; border: 1px solid var(--admin-border); aspect-ratio: 1/1;">
+                                                <img src="@img" style="width: 100%; height: 100%; object-fit: cover;" />
+                                                <button type="submit" form="delete-project-img-form-@i" class="btn-admin btn-admin-danger" style="position: absolute; top: 1px; right: 1px; width: 18px; height: 18px; padding: 0; font-size: 9px; line-height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; min-width: unset; box-shadow: 0 1px 3px rgba(0,0,0,0.3);" title="Xóa ảnh này">✕</button>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <label class="checkbox-group" for="IsActiveCheck" style="margin-top: 10px;">
+                        <input type="checkbox" asp-for="InputProject.IsActive" id="IsActiveCheck" class="checkbox-control" />
+                        <span class="form-label" style="font-weight: 600; cursor: pointer; user-select: none;">Công khai dự án</span>
+                    </label>
+
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <button type="submit" class="btn-admin btn-admin-primary" style="padding: 12px; font-size: 14.5px;">
+                            @(Model.IsEditMode ? "Cập Nhật Dự Án" : "Lưu Dự Án")
+                        </button>
+                        <a href="/Admin/ManageProjects" class="btn-admin btn-admin-secondary" style="padding: 11px; text-align: center;">Hủy bỏ</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @if (Model.IsEditMode && !string.IsNullOrEmpty(Model.InputProject.ProjectImageUrls))
+        {
+            var images = Model.InputProject.ProjectImageUrls.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            @for (int i = 0; i < images.Length; i++)
+            {
+                var img = images[i];
+                <form id="delete-project-img-form-@i" method="post" asp-page-handler="DeleteProjectImage" asp-route-projectId="@Model.InputProject.Id" asp-route-imageUrl="@img" style="display:none;" confirm-title="Xóa ảnh thi công" confirm-message="Bạn có chắc chắn muốn xóa ảnh công trình này không?">
+                    @Html.AntiForgeryToken()
+                </form>
+            }
+        }
+    </div>
+
+    @section Scripts {
+        <!-- Load Quill Editor stylesheet and library -->
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Initialize Quill Editor
+                const quill = new Quill('#editor-container', {
+                    theme: 'snow',
+                    placeholder: 'Nhập mô tả quá trình thiết kế, thi công dự án tại đây...',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link', 'image', 'clean']
+                        ]
+                    }
+                });
+
+                // Copy HTML content from Quill into hidden textarea on submit
+                const form = document.getElementById('project-form');
+                form.addEventListener('submit', function(e) {
+                    const content = quill.root.innerHTML;
+                    
+                    if (quill.getText().trim().length === 0) {
+                        e.preventDefault();
+                        showToast('Nội dung chi tiết dự án không được để trống!', 'error', 'Lỗi nhập liệu');
+                        return;
+                    }
+                    
+                    document.getElementById('hidden-content').value = content;
+                });
+            });
+        </script>
+    }
+}
+else
+{
+    <!-- FULL-PAGE TABLE LIST VIEW -->
+    <div class="content-card">
+        <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
+            <h3 class="card-title">📐 Quản Lý Danh Sách Dự Án Tiêu Biểu (@Model.TotalItems)</h3>
+            
+            <div style="display: flex; gap: 10px; align-items: center; margin-left: auto;">
+                <form method="get" style="display: flex; gap: 6px; min-width: 250px;">
+                    <input type="text" name="SearchQuery" value="@Model.SearchQuery" class="form-control form-control-sm" placeholder="Tìm tên, loại, địa điểm..." style="padding: 6px 10px; font-size: 13px;" />
+                    <button type="submit" class="btn-admin btn-admin-primary btn-admin-sm" style="padding: 6px 12px;">Tìm</button>
+                    @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                    {
+                        <a href="/Admin/ManageProjects" class="btn-admin btn-admin-secondary btn-admin-sm" style="padding: 6px 12px; display: flex; align-items: center; justify-content: center; text-decoration: none;">Xóa</a>
+                    }
+                </form>
+                <a href="/Admin/ManageProjects?action=create" class="btn-admin btn-admin-primary" style="padding: 8px 16px; font-size: 13.5px;">➕ Tạo dự án mới</a>
+            </div>
+        </div>
+
+        @if (Model.Projects.Any())
+        {
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Ảnh bìa</th>
+                            <th>Tên dự án</th>
+                            <th>Loại công trình</th>
+                            <th>Địa điểm</th>
+                            <th>Ngày hoàn thành</th>
+                            <th style="width: 110px;">Trạng thái</th>
+                            <th style="text-align: right; width: 140px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Projects)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@p.ImageUrl" alt="@p.Title" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=80&q=80'" style="width: 65px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid var(--admin-border); display: block;" />
+                                </td>
+                                <td style="font-weight: 700; color: var(--admin-text-main); font-size: 14px;">
+                                    @p.Title
+                                </td>
+                                <td style="font-weight: 600; color: var(--admin-text-muted); font-size: 13.5px;">
+                                    @p.Category
+                                </td>
+                                <td style="font-size: 13.5px; color: var(--admin-text-main);">
+                                    📍 @(string.IsNullOrEmpty(p.Location) ? "Chưa cập nhật" : p.Location)
+                                </td>
+                                <td style="font-size: 13px; color: var(--admin-text-muted);">
+                                    @(p.CompletionDate.HasValue ? p.CompletionDate.Value.ToString("dd/MM/yyyy") : "Chưa hoàn thành")
+                                </td>
+                                <td>
+                                    @if (p.IsActive)
+                                    {
+                                        <span class="badge badge-success">✓ Hiện</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning">✕ Ẩn</span>
+                                    }
+                                </td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <div class="btn-group">
+                                        <a href="/Admin/ManageProjects?editId=@p.Id" class="btn-admin btn-admin-secondary btn-admin-sm">Sửa</a>
+                                        
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id" style="display: inline;" confirm-title="Xóa dự án tiêu biểu" confirm-message="Bạn có chắc chắn muốn xóa dự án này không? Dữ liệu và tất cả các ảnh thi công liên quan sẽ bị xóa vĩnh viễn.">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-top: 1px solid var(--admin-border); background-color: var(--admin-bg-alt); border-bottom-left-radius: var(--radius-card); border-bottom-right-radius: var(--radius-card);">
+                    <span style="font-size: 13px; color: var(--admin-text-muted);">
+                        Hiển thị trang <strong>@Model.PageNumber</strong> / @Model.TotalPages (Tổng @Model.TotalItems dự án)
+                    </span>
+                    <div style="display: flex; gap: 4px;">
+                        @if (Model.PageNumber > 1)
+                        {
+                            <a href="/Admin/ManageProjects?PageNumber=@(Model.PageNumber - 1)@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" class="btn-admin btn-admin-secondary btn-admin-sm" style="text-decoration: none; padding: 5px 10px;">◀ Trước</a>
+                        }
+                        else
+                        {
+                            <span class="btn-admin btn-admin-secondary btn-admin-sm" style="opacity: 0.5; cursor: not-allowed; padding: 5px 10px;">◀ Trước</span>
+                        }
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            if (i == Model.PageNumber)
+                            {
+                                <span class="btn-admin btn-admin-primary btn-admin-sm" style="font-weight: bold; padding: 5px 10px;">@i</span>
+                            }
+                            else
+                            {
+                                <a href="/Admin/ManageProjects?PageNumber=@i@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" class="btn-admin btn-admin-secondary btn-admin-sm" style="text-decoration: none; padding: 5px 10px;">@i</a>
+                            }
+                        }
+
+                        @if (Model.PageNumber < Model.TotalPages)
+                        {
+                            <a href="/Admin/ManageProjects?PageNumber=@(Model.PageNumber + 1)@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" class="btn-admin btn-admin-secondary btn-admin-sm" style="text-decoration: none; padding: 5px 10px;">Sau ▶</a>
+                        }
+                        else
+                        {
+                            <span class="btn-admin btn-admin-secondary btn-admin-sm" style="opacity: 0.5; cursor: not-allowed; padding: 5px 10px;">Sau ▶</span>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="text-align: center; padding: 60px 20px; color: var(--admin-text-muted);">
+                <div style="font-size: 40px; margin-bottom: 15px;">📐</div>
+                <p style="font-size: 16px; font-weight: 500;">Chưa có dự án thi công nào trong hệ thống.</p>
+                <a href="/Admin/ManageProjects?action=create" class="btn-admin btn-admin-primary" style="margin-top: 15px; display: inline-block;">Tạo dự án đầu tiên</a>
+            </div>
+        }
+    </div>
+}

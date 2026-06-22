@@ -1,0 +1,91 @@
+@page
+@model noithat_ducanh.Pages.Admin.ManageCategoriesModel
+@{
+    ViewData["Title"] = "Quản Lý Danh Mục";
+}
+
+<!-- Alert Notification -->
+@if (TempData["AdminMessage"] != null)
+{
+    <div style="background: var(--status-success-bg); color: var(--status-success-text); border: 1px solid rgba(16, 185, 129, 0.2); padding: 14px 20px; border-radius: var(--radius-md); font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
+        <span>✔</span>
+        <span>@TempData["AdminMessage"]</span>
+    </div>
+}
+
+<div class="admin-split-layout" style="grid-template-columns: 320px 1fr;">
+    
+    <!-- LEFT PANEL: FORM SECTION -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                @(Model.IsEditMode ? "✍ Sửa Danh Mục" : "➕ Thêm Danh Mục Mới")
+            </h3>
+        </div>
+        
+        <form method="post" asp-route-editId="@(Model.IsEditMode ? Model.InputCategory.Id : null)" style="display: flex; flex-direction: column; gap: 16px;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="InputCategory.Id" />
+            
+            <div class="form-group">
+                <label class="form-label">Tên danh mục *</label>
+                <input type="text" asp-for="InputCategory.Name" required class="form-control" placeholder="Ví dụ: Kệ nhựa, Tủ bếp..." />
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit" class="btn-admin btn-admin-primary" style="flex: 1; padding: 11px 20px;">
+                    @(Model.IsEditMode ? "Cập Nhật" : "Thêm Mới")
+                </button>
+                @if (Model.IsEditMode)
+                {
+                    <a href="/Admin/ManageCategories" class="btn-admin btn-admin-secondary" style="padding: 11px 20px; text-align: center;">Hủy</a>
+                }
+            </div>
+        </form>
+    </div>
+
+    <!-- RIGHT PANEL: LIST SECTION -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">📦 Danh Sách Danh Mục Hiện Có (@Model.Categories.Count)</h3>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ID</th>
+                        <th>Tên danh mục</th>
+                        <th>Đường dẫn (Slug)</th>
+                        <th style="text-align: right; width: 130px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.Categories)
+                    {
+                        <tr>
+                            <td>@c.Id</td>
+                            <td style="font-weight: 700; color: var(--admin-text-main);">
+                                @c.Name
+                            </td>
+                            <td style="font-weight: 600; color: var(--admin-text-muted); font-size: 13.5px;">
+                                @c.Slug
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <div class="btn-group">
+                                    <a href="/Admin/ManageCategories?editId=@c.Id" class="btn-admin btn-admin-secondary btn-admin-sm">Sửa</a>
+                                    
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@c.Id" style="display: inline;" confirm-title="Xóa danh mục" confirm-message="Bạn có chắc chắn muốn xóa danh mục này không? Các sản phẩm thuộc danh mục này sẽ tự động chuyển về trạng thái 'Chưa phân loại'.">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm">Xóa</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>

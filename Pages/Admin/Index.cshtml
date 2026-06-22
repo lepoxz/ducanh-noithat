@@ -1,0 +1,230 @@
+@page
+@model noithat_ducanh.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Bảng Điều Khiển";
+}
+
+
+
+<!-- Stat Cards -->
+<div class="stats-grid">
+    <div class="stat-card primary">
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
+            <span class="stat-label">Sản phẩm</span>
+            <strong class="stat-value">@Model.ProductCount</strong>
+        </div>
+    </div>
+    
+    <div class="stat-card warning">
+        <div class="stat-icon">✍</div>
+        <div class="stat-info">
+            <span class="stat-label">Bài viết</span>
+            <strong class="stat-value">@Model.PostCount</strong>
+        </div>
+    </div>
+    
+    <div class="stat-card danger">
+        <div class="stat-icon">📞</div>
+        <div class="stat-info">
+            <span class="stat-label">Chờ tư vấn</span>
+            <strong class="stat-value">@Model.PendingContactCount</strong>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Request List Card -->
+<div class="content-card">
+    <div class="card-header">
+        <h3 class="card-title">💬 Khách Hàng Yêu Cầu Tư Vấn</h3>
+        <span class="badge @(Model.PendingContactCount > 0 ? "badge-danger" : "badge-success")" style="font-size: 13px;">
+            @(Model.PendingContactCount > 0 ? $"Có {Model.PendingContactCount} yêu cầu mới" : "Không có yêu cầu mới")
+        </span>
+    </div>
+
+    @if (Model.ContactRequests.Any())
+    {
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Khách hàng</th>
+                        <th>Thông tin liên hệ</th>
+                        <th>Nội dung yêu cầu</th>
+                        <th>Thời gian</th>
+                        <th>Trạng thái</th>
+                        <th style="text-align: right;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.ContactRequests)
+                    {
+                        <tr>
+                            <td style="font-weight: 700; color: var(--admin-text-main);">
+                                @c.FullName
+                            </td>
+                            <td>
+                                <div style="font-weight: 600;">📞 @c.PhoneNumber</div>
+                                @if (!string.IsNullOrEmpty(c.Address))
+                                {
+                                    <div style="font-size: 12.5px; color: var(--admin-text-muted); margin-top: 3px;">📍 @c.Address</div>
+                                }
+                            </td>
+                            <td style="max-width: 320px; line-height: 1.5; color: var(--admin-text-main); font-size: 14px;">
+                                @(string.IsNullOrEmpty(c.Message) ? "-" : c.Message)
+                            </td>
+                            <td style="font-size: 13.5px; color: var(--admin-text-muted);">
+                                @c.CreatedAt.ToString("HH:mm - dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @if (c.IsProcessed)
+                                {
+                                    <span class="badge badge-success">Đã liên hệ</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-danger">Chờ xử lý</span>
+                                }
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <div class="btn-group">
+                                    @if (!c.IsProcessed)
+                                    {
+                                        <form method="post" asp-page-handler="Process" asp-route-id="@c.Id" style="display: inline;">
+                                            <button type="submit" class="btn-admin btn-admin-success btn-admin-sm">✔ Gọi điện</button>
+                                        </form>
+                                    }
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@c.Id" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa yêu cầu tư vấn này?')">
+                                        <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm">🗑 Xóa</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div style="text-align: center; padding: 50px 20px; color: var(--admin-text-muted);">
+            <div style="font-size: 40px; margin-bottom: 15px;">📪</div>
+            <p style="font-size: 16px; font-weight: 500;">Chưa có yêu cầu tư vấn nào được gửi đến hệ thống.</p>
+        </div>
+    }
+</div>
+
+<!-- Custom Slider Settings Card -->
+<div class="content-card" style="margin-top: 30px;">
+    <div class="card-header">
+        <h3 class="card-title">🖼️ Tùy Biến Ảnh Nền Hero Slider</h3>
+    </div>
+    
+    <form method="post" asp-page-handler="UpdateSettings" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
+        @Html.AntiForgeryToken()
+        
+        <div class="form-grid">
+            <div class="form-group" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); padding: 15px; border-radius: 8px;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 10px; display: block; color: var(--admin-primary);">🖼️ Ảnh Slide 1</label>
+                
+                @if (!string.IsNullOrEmpty(Model.HeroImage1))
+                {
+                    <div style="margin-bottom: 10px;">
+                        <span style="font-size: 12px; color: var(--admin-text-muted); display: block; margin-bottom: 4px;">Xem trước ảnh hiện tại:</span>
+                        <img src="@Model.HeroImage1" alt="Slide 1 Preview" style="max-height: 80px; border-radius: 4px; border: 1px solid var(--admin-border);" />
+                    </div>
+                }
+
+                <div style="margin-bottom: 10px;">
+                    <label class="form-label" style="font-size: 13px;">Tải ảnh mới từ máy tính</label>
+                    <input type="file" name="hero1File" accept="image/*" class="form-control" />
+                </div>
+                
+                <div>
+                    <label class="form-label" style="font-size: 13px;">Hoặc sử dụng liên kết ảnh (URL)</label>
+                    <input type="text" name="heroImage1" value="@Model.HeroImage1" required class="form-control" placeholder="Đường dẫn ảnh slide 1..." />
+                </div>
+            </div>
+            
+            <div class="form-group" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); padding: 15px; border-radius: 8px;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 10px; display: block; color: var(--admin-primary);">🖼️ Ảnh Slide 2</label>
+                
+                @if (!string.IsNullOrEmpty(Model.HeroImage2))
+                {
+                    <div style="margin-bottom: 10px;">
+                        <span style="font-size: 12px; color: var(--admin-text-muted); display: block; margin-bottom: 4px;">Xem trước ảnh hiện tại:</span>
+                        <img src="@Model.HeroImage2" alt="Slide 2 Preview" style="max-height: 80px; border-radius: 4px; border: 1px solid var(--admin-border);" />
+                    </div>
+                }
+
+                <div style="margin-bottom: 10px;">
+                    <label class="form-label" style="font-size: 13px;">Tải ảnh mới từ máy tính</label>
+                    <input type="file" name="hero2File" accept="image/*" class="form-control" />
+                </div>
+                
+                <div>
+                    <label class="form-label" style="font-size: 13px;">Hoặc sử dụng liên kết ảnh (URL)</label>
+                    <input type="text" name="heroImage2" value="@Model.HeroImage2" required class="form-control" placeholder="Đường dẫn ảnh slide 2..." />
+                </div>
+            </div>
+            
+            <div class="form-group" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); padding: 15px; border-radius: 8px;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 10px; display: block; color: var(--admin-primary);">🖼️ Ảnh Slide 3</label>
+                
+                @if (!string.IsNullOrEmpty(Model.HeroImage3))
+                {
+                    <div style="margin-bottom: 10px;">
+                        <span style="font-size: 12px; color: var(--admin-text-muted); display: block; margin-bottom: 4px;">Xem trước ảnh hiện tại:</span>
+                        <img src="@Model.HeroImage3" alt="Slide 3 Preview" style="max-height: 80px; border-radius: 4px; border: 1px solid var(--admin-border);" />
+                    </div>
+                }
+
+                <div style="margin-bottom: 10px;">
+                    <label class="form-label" style="font-size: 13px;">Tải ảnh mới từ máy tính</label>
+                    <input type="file" name="hero3File" accept="image/*" class="form-control" />
+                </div>
+                
+                <div>
+                    <label class="form-label" style="font-size: 13px;">Hoặc sử dụng liên kết ảnh (URL)</label>
+                    <input type="text" name="heroImage3" value="@Model.HeroImage3" required class="form-control" placeholder="Đường dẫn ảnh slide 3..." />
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: right;">
+            <button type="submit" class="btn-admin btn-admin-primary" style="padding: 10px 24px;">Lưu Cấu Hình Slide</button>
+        </div>
+    </form>
+</div>
+
+<!-- Custom Footer Settings Card -->
+<div class="content-card" style="margin-top: 30px;">
+    <div class="card-header">
+        <h3 class="card-title">📞 Cấu Hình Thông Tin Chân Trang (Footer)</h3>
+    </div>
+    
+    <form method="post" asp-page-handler="UpdateFooterSettings" style="display: flex; flex-direction: column; gap: 20px;">
+        @Html.AntiForgeryToken()
+        
+        <div class="form-grid">
+            <div class="form-group" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); padding: 15px; border-radius: 8px;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 10px; display: block; color: var(--admin-primary);">📍 Địa chỉ</label>
+                <input type="text" name="address" value="@Model.Address" required class="form-control" placeholder="Ví dụ: Ông Bầu, Tỉnh Đồng Tháp" style="width: 100%;" />
+            </div>
+            
+            <div class="form-group" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); padding: 15px; border-radius: 8px;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 10px; display: block; color: var(--admin-primary);">📞 Hotline / Zalo</label>
+                <input type="text" name="hotline" value="@Model.Hotline" required class="form-control" placeholder="Ví dụ: 0773 12 1234" style="width: 100%;" />
+            </div>
+            
+            <div class="form-group" style="background: var(--admin-card-bg); border: 1px solid var(--admin-border); padding: 15px; border-radius: 8px;">
+                <label class="form-label" style="font-weight: 700; margin-bottom: 10px; display: block; color: var(--admin-primary);">✉ Email</label>
+                <input type="email" name="email" value="@Model.Email" required class="form-control" placeholder="Ví dụ: noithatnhua.ducanh@gmail.com" style="width: 100%;" />
+            </div>
+        </div>
+        
+        <div style="text-align: right;">
+            <button type="submit" class="btn-admin btn-admin-primary" style="padding: 10px 24px;">Lưu Cấu Hình Chân Trang</button>
+        </div>
+    </form>
+</div>

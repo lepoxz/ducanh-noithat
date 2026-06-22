@@ -1,0 +1,57 @@
+@page
+@model noithat_ducanh.Pages.ProjectsModel
+@{
+    ViewData["Title"] = "Công Trình Thực Tế - Nội Thất Đức Anh";
+}
+
+<section class="sec" style="min-height: 80vh; padding-top: 40px;">
+    <!-- Section Header -->
+    <div class="sec-hd" style="margin-bottom: 30px;">
+        <div>
+            <h2 class="sec-title" style="font-size: 26px;">Công Trình Thực Tế</h2>
+            <p style="color: var(--color-muted); margin-top: 6px; font-size: 14.5px;">Hình ảnh thực tế thi công lắp đặt nội thất nhựa Đài Loan cao cấp tại các chung cư và nhà phố</p>
+        </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-bottom: 50px;">
+        @if (Model.Projects.Any())
+        {
+            @foreach (var project in Model.Projects)
+            {
+                <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); overflow: hidden; box-shadow: var(--shadow-card); transition: transform 0.2s; display: flex; flex-direction: column;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <a href="/ProjectDetail/@project.Id" style="aspect-ratio: 4/3; overflow: hidden; position: relative; display: block;">
+                        <img src="@project.ImageUrl" alt="Hình ảnh công trình: @project.Title" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80'" style="width:100%; height:100%; object-fit:cover; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
+                    </a>
+                    <div style="padding: 20px; display: flex; flex-direction: column; justify-content: space-between; flex: 1;">
+                        <div>
+                            <span style="font-size: 11.5px; color: var(--color-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">🏠 @project.Category</span>
+                            <h3 style="font-size: 16px; font-weight: 800; color: var(--color-primary-dark); margin: 8px 0 10px; line-height: 1.4;">
+                                <a href="/ProjectDetail/@project.Id" style="text-decoration: none; color: inherit; transition: color 0.15s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'">
+                                    @project.Title
+                                </a>
+                            </h3>
+                            <p style="font-size: 13.5px; color: var(--color-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px;">
+                                @project.Summary
+                            </p>
+                        </div>
+                        <div style="border-top: 1px solid var(--color-border); padding-top: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--color-muted);">
+                            <span>📍 @(string.IsNullOrEmpty(project.Location) ? "Hà Nội" : project.Location)</span>
+                            <a href="/ProjectDetail/@project.Id" style="font-weight: 700; color: var(--color-primary); text-decoration: none; display: flex; align-items: center; gap: 4px; transition: gap 0.15s;" onmouseover="this.style.gap='7px'" onmouseout="this.style.gap='4px'">
+                                Xem chi tiết <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="width: 12px; height: 12px;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="grid-column: 1 / -1; background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 50px 30px; text-align: center; color: var(--color-muted); box-shadow: var(--shadow-card);">
+                <div style="font-size: 40px; margin-bottom: 15px;">🏠</div>
+                <p style="font-size: 15.5px; font-weight: 500;">Hiện tại chúng tôi đang cập nhật các công trình thi công thực tế mới nhất.</p>
+                <p style="font-size: 13.5px; margin-top: 5px;">Xin vui lòng quay lại sau hoặc liên hệ Hotline để được tư vấn trực tiếp.</p>
+            </div>
+        }
+    </div>
+</section>

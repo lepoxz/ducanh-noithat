@@ -1,0 +1,213 @@
+@page
+@model noithat_ducanh.Pages.Admin.ManagePostsModel
+@{
+    ViewData["Title"] = Model.IsEditMode ? "Chỉnh Sửa Bài Viết" : (Request.Query["action"] == "create" ? "Thêm Bài Viết Mới" : "Quản Lý Bài Viết");
+}
+
+@if (Model.IsEditMode || Request.Query["action"] == "create")
+{
+    <!-- FULL-PAGE FORM FOR ADD/EDIT -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                @(Model.IsEditMode ? "✍ Chỉnh sửa bài viết" : "➕ Tạo bài viết mới")
+            </h3>
+            <a href="/Admin/ManagePosts" class="btn-admin btn-admin-secondary">← Quay lại danh sách</a>
+        </div>
+
+        <form method="post" asp-route-editId="@(Model.IsEditMode ? Model.InputPost.Id : null)" id="post-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="InputPost.Id" />
+            <textarea asp-for="InputPost.Content" id="hidden-content" style="display:none;"></textarea>
+
+            <div class="form-grid" style="grid-template-columns: 2fr 1fr; gap: 30px;">
+                
+                <!-- Main details (Left Column) -->
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="form-group">
+                        <label class="form-label">Tiêu đề bài viết *</label>
+                        <input type="text" asp-for="InputPost.Title" required class="form-control" placeholder="Nhập tiêu đề hấp dẫn..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tóm tắt ngắn gọn *</label>
+                        <textarea asp-for="InputPost.Summary" rows="3" required class="form-control" placeholder="Mô tả ngắn gọn nội dung bài viết hiển thị ở trang danh sách..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nội dung chi tiết *</label>
+                        <!-- Quill Rich Text Editor Container -->
+                        <div id="editor-wrapper" style="border-radius: var(--radius-md); overflow: hidden; border: 1.5px solid var(--admin-border);">
+                            <div id="editor-container" style="height: 350px; background: white; font-family: inherit; font-size: 14.5px;">
+                                @Html.Raw(Model.InputPost.Content)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side details (Right Column) -->
+                <div style="display: flex; flex-direction: column; gap: 20px; background-color: var(--admin-bg); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--admin-border); height: fit-content;">
+                    <h4 style="font-weight: 700; font-size: 14.5px; color: var(--admin-text-main); border-bottom: 1px solid var(--admin-border); padding-bottom: 10px; margin-bottom: 5px;">Cấu hình xuất bản</h4>
+
+                    <div class="form-group">
+                        <label class="form-label">Ảnh đại diện bài viết (URL)</label>
+                        <input type="text" asp-for="InputPost.ImageUrl" id="image-url-input" class="form-control" placeholder="https://unsplash.com/..." />
+                        <div id="image-preview-box" style="margin-top: 15px; text-align: center; display: @(string.IsNullOrEmpty(Model.InputPost.ImageUrl) ? "none" : "block");">
+                            <span style="font-size: 11px; color: var(--admin-text-muted); display: block; margin-bottom: 5px;">Xem trước ảnh:</span>
+                            <img src="@Model.InputPost.ImageUrl" id="image-preview" alt="Preview Image" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=150&q=80'" style="max-height: 120px; border-radius: 6px; border: 1px solid var(--admin-border); object-fit: cover; max-width: 100%;" />
+                        </div>
+                    </div>
+
+                    <label class="checkbox-group" for="IsActiveCheck">
+                        <input type="checkbox" asp-for="InputPost.IsActive" id="IsActiveCheck" class="checkbox-control" />
+                        <span class="form-label" style="font-weight: 600; cursor: pointer; user-select: none;">Xuất bản công khai</span>
+                    </label>
+
+                    @if (Model.IsEditMode)
+                    {
+                        <div style="font-size: 12.5px; color: var(--admin-text-muted);">
+                            <p>📅 Ngày tạo: @Model.InputPost.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+                        </div>
+                    }
+
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <button type="submit" class="btn-admin btn-admin-primary" style="padding: 12px; font-size: 14.5px;">
+                            @(Model.IsEditMode ? "Cập Nhật Bài Viết" : "Đăng Bài Viết")
+                        </button>
+                        <a href="/Admin/ManagePosts" class="btn-admin btn-admin-secondary" style="padding: 11px; text-align: center;">Hủy bỏ</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @section Scripts {
+        <!-- Load Quill Editor stylesheet and library -->
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Initialize Quill Editor
+                const quill = new Quill('#editor-container', {
+                    theme: 'snow',
+                    placeholder: 'Nhập nội dung chi tiết bài viết tại đây...',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            ['link', 'image', 'clean']
+                        ]
+                    }
+                });
+
+                // Update preview image automatically
+                const imgInput = document.getElementById('image-url-input');
+                const imgPreviewBox = document.getElementById('image-preview-box');
+                const imgPreview = document.getElementById('image-preview');
+
+                imgInput.addEventListener('input', function() {
+                    const url = imgInput.value.trim();
+                    if (url) {
+                        imgPreview.src = url;
+                        imgPreviewBox.style.display = 'block';
+                    } else {
+                        imgPreviewBox.style.display = 'none';
+                    }
+                });
+
+                // Copy HTML content from Quill into hidden textarea on submit
+                const form = document.getElementById('post-form');
+                form.addEventListener('submit', function(e) {
+                    const content = quill.root.innerHTML;
+                    
+                    // Simple validation: check if editor is empty or only contains default empty tags
+                    if (quill.getText().trim().length === 0) {
+                        e.preventDefault();
+                        showToast('Nội dung bài viết không được để trống!', 'error', 'Lỗi nhập liệu');
+                        return;
+                    }
+                    
+                    document.getElementById('hidden-content').value = content;
+                });
+            });
+        </script>
+    }
+}
+else
+{
+    <!-- FULL-PAGE TABLE LIST VIEW -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">✍ Quản Lý Danh Sách Bài Viết (@Model.Posts.Count)</h3>
+            <a href="/Admin/ManagePosts?action=create" class="btn-admin btn-admin-primary">➕ Tạo bài viết mới</a>
+        </div>
+
+        @if (Model.Posts.Any())
+        {
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Ảnh bìa</th>
+                            <th>Tiêu đề</th>
+                            <th>Tóm tắt ngắn</th>
+                            <th style="width: 140px;">Ngày đăng</th>
+                            <th style="width: 110px;">Trạng thái</th>
+                            <th style="text-align: right; width: 140px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Posts)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@p.ImageUrl" alt="@p.Title" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=80&q=80'" style="width: 65px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid var(--admin-border); display: block;" />
+                                </td>
+                                <td style="font-weight: 700; color: var(--admin-text-main); font-size: 14px;">
+                                    @p.Title
+                                </td>
+                                <td style="color: var(--admin-text-muted); font-size: 13.5px; max-width: 350px;">
+                                    @p.Summary
+                                </td>
+                                <td style="font-size: 13px; color: var(--admin-text-muted);">
+                                    @p.CreatedAt.ToString("HH:mm - dd/MM/yyyy")
+                                </td>
+                                <td>
+                                    @if (p.IsActive)
+                                    {
+                                        <span class="badge badge-success">✓ Đăng</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-warning">✕ Nháp</span>
+                                    }
+                                </td>
+                                <td style="text-align: right; white-space: nowrap;">
+                                    <div class="btn-group">
+                                        <a href="/Admin/ManagePosts?editId=@p.Id" class="btn-admin btn-admin-secondary btn-admin-sm">Sửa</a>
+                                        
+                                        <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id" style="display: inline;" confirm-title="Xóa bài viết" confirm-message="Bạn có chắc chắn muốn xóa bài viết này không? Bài viết đã xóa không thể khôi phục lại.">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div style="text-align: center; padding: 60px 20px; color: var(--admin-text-muted);">
+                <div style="font-size: 40px; margin-bottom: 15px;">✍</div>
+                <p style="font-size: 16px; font-weight: 500;">Chưa có bài viết nào trong hệ thống.</p>
+                <a href="/Admin/ManagePosts?action=create" class="btn-admin btn-admin-primary" style="margin-top: 15px; display: inline-block;">Viết bài đầu tiên</a>
+            </div>
+        }
+    </div>
+}

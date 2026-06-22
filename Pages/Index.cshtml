@@ -1,0 +1,435 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Nội Thất Nhựa Đức Anh – Bền Đẹp Mãi Với Thời Gian";
+}
+
+<!-- HERO SLIDER -->
+<section class="hero" aria-label="Hero slider">
+  <div class="hero-slides" id="heroSlides">
+    <div class="slide slide-1 on">
+      <div class="slide-bg" style="background-image: url('@Model.HeroImage1');"></div>
+    </div>
+    <div class="slide slide-2">
+      <div class="slide-bg" style="background-image: url('@Model.HeroImage2');"></div>
+    </div>
+    <div class="slide slide-3">
+      <div class="slide-bg" style="background-image: url('@Model.HeroImage3');"></div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <div class="wrap">
+      <div class="hero-eye">Chuyên Nghiệp • Uy Tín • Chất Lượng Cao</div>
+      <h1 class="hero-h1">NỘI THẤT NHỰA<br/><span>ĐỨC ANH</span></h1>
+      <p class="hero-p">Chuyên thiết kế, sản xuất và lắp đặt nội thất nhựa cao cấp Đài Loan. Cam kết bền đẹp, hiện đại, phù hợp mọi không gian sống.</p>
+      <div class="hero-btns">
+        <a class="btn-acc" href="#noi-that-gia-dinh">🛋 Xem Sản Phẩm</a>
+        <a class="btn-ghost" href="#tu-van">📞 Tư Vấn Miễn Phí</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-dots" id="heroDots">
+    <span class="on" onclick="goSlide(0)" aria-label="Slide 1"></span>
+    <span onclick="goSlide(1)" aria-label="Slide 2"></span>
+    <span onclick="goSlide(2)" aria-label="Slide 3"></span>
+  </div>
+  <button class="hero-arrow arrow-prev" onclick="changeSlide(-1)" aria-label="Slide trước">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="hero-arrow arrow-next" onclick="changeSlide(1)" aria-label="Slide tiếp theo">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-label="Tin nhanh thương hiệu">
+  <div class="ticker-track">
+    <span>Nội thất nhựa cao cấp Đài Loan</span>
+    <span>Tủ bếp nhựa hiện đại</span>
+    <span>Tủ quần áo nhựa đa năng</span>
+    <span>Giường ngủ nhựa sang trọng</span>
+    <span>Thiết kế thi công trọn gói</span>
+    <span>Bảo hành 5 năm chính hãng</span>
+    <span>Nội thất nhựa cao cấp Đài Loan</span>
+    <span>Tủ bếp nhựa hiện đại</span>
+    <span>Tủ quần áo nhựa đa năng</span>
+    <span>Giường ngủ nhựa sang trọng</span>
+    <span>Thiết kế thi công trọn gói</span>
+    <span>Bảo hành 5 năm chính hãng</span>
+  </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<section class="sec" id="about">
+  <div class="about-grid">
+    <div class="about-img-wrap">
+      <img src="/images/about-kitchen.jpg" alt="Nhà xưởng và đội ngũ thi công lắp đặt Nội Thất Nhựa Đức Anh"/>
+      <div class="about-overlay"></div>
+      <div class="about-badge">
+        <strong>10+</strong>
+        <span>Năm<br/>Kinh Nghiệm</span>
+      </div>
+      <div class="about-badge2">
+        <strong>2000+</strong>
+        <span>Công Trình</span>
+      </div>
+    </div>
+    <div class="about-txt">
+          <h2>NỘI THẤT NHỰA CAO CẤP<br/><span>ĐỨC ANH</span></h2>
+          <div class="about-tagline">✦ Bền Đẹp Mãi Với Thời Gian ✦</div>
+          <p>Xưởng Thiết Kế & Sản Xuất Nội Thất Nhựa Cao Cấp Đức Anh là thương hiệu chuyên thiết kế, sản xuất và lắp đặt nội thất nhựa cao cấp tại Đồng Tháp. Với hơn 10 năm kinh nghiệm, chúng tôi tự hào mang đến cho khách hàng những sản phẩm chất lượng vượt trội.</p>
+      <p>Chúng tôi chuyên phục vụ các công trình chung cư, nhà ở, biệt thự, văn phòng và khách sạn với tiêu chí: <strong>Hiện đại – Bền bỉ – Thẩm mỹ cao</strong>.</p>
+          <div class="feats">
+            <div class="feat">
+              <div class="feat-ico">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <div>
+                <strong>Chống Nước 100%</strong>
+                <span>Cam kết chống nước tuyệt đối, không mối mọt</span>
+              </div>
+            </div>
+        <div class="feat">
+          <div class="feat-ico">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <strong>Bảo Hành 5 Năm</strong>
+            <span>Cam kết bảo hành chính hãng toàn bộ sản phẩm</span>
+          </div>
+        </div>
+            <div class="feat">
+              <div class="feat-ico">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="white" stroke-width="2" fill="none"/><polyline points="9 22 9 12 15 12 15 22" stroke="white" stroke-width="2" fill="none"/></svg>
+              </div>
+              <div>
+                <strong>Thiết Kế 3D Miễn Phí</strong>
+                <span>Lên bản vẽ 3D miễn phí cho mọi khách hàng</span>
+              </div>
+            </div>
+            <div class="feat">
+              <div class="feat-ico">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="white" stroke-width="2" fill="none"/></svg>
+              </div>
+              <div>
+                <strong>Gia Công CNC Chuẩn Xác</strong>
+                <span>Gia công tự động bằng máy CNC chuẩn xác 100%</span>
+              </div>
+            </div>
+      </div>
+      <a class="btn-acc" href="#tu-van">Đăng Ký Tư Vấn Ngay →</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-grid">
+    <div class="sitem">
+      <strong>2,500+</strong>
+      <span>Công Trình Hoàn Thành</span>
+    </div>
+    <div class="sitem">
+      <strong>10+</strong>
+      <span>Năm Kinh Nghiệm</span>
+    </div>
+    <div class="sitem">
+      <strong>98%</strong>
+      <span>Khách Hàng Hài Lòng</span>
+    </div>
+    <div class="sitem">
+      <strong>500+</strong>
+      <span>Mẫu Sản Phẩm</span>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS - GIA DINH -->
+<section class="sec" id="noi-that-gia-dinh">
+  <div class="sec-hd">
+    <h2 class="sec-title">Nội Thất Gia Đình</h2>
+    @if (!string.IsNullOrEmpty(Model.Category))
+    {
+        <a class="sec-more" href="/Index#noi-that-gia-dinh">Hiển thị tất cả</a>
+    }
+  </div>
+  <div class="ptabs">
+    <a href="/Index#noi-that-gia-dinh" class="ptab @(string.IsNullOrEmpty(Model.Category) ? "on" : "")">Tất Cả</a>
+    @foreach (var c in Model.Categories.Where(c => c.Name != "Văn phòng"))
+    {
+        <a href="/Index?category=@c.Name#noi-that-gia-dinh" class="ptab @(Model.Category == c.Name ? "on" : "")">@c.Name</a>
+    }
+  </div>
+  
+  <div class="pgrid">
+    @if (Model.FamilyProducts.Any())
+    {
+        @foreach (var p in Model.FamilyProducts)
+        {
+            <div class="pcard">
+              <div class="img">
+                <img src="@p.ImageUrl" alt="Hình ảnh sản phẩm: @p.Name" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80'"/>
+              </div>
+              <div class="pi">
+                <h3>@p.Name</h3>
+                <div class="prow">
+                    @if (p.Price.HasValue)
+                    {
+                        <span class="pnew">@p.Price.Value.ToString("N0")đ</span>
+                        @if (p.OldPrice.HasValue)
+                        {
+                            <span class="pold">@p.OldPrice.Value.ToString("N0")đ</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="plh">Liên hệ</span>
+                    }
+                </div>
+                <a class="pbtn" href="/ProductDetail/@p.Id" style="text-decoration: none;">Xem Chi Tiết</a>
+              </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--color-muted);">
+            <p>Không tìm thấy sản phẩm gia đình nào phù hợp.</p>
+        </div>
+    }
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why">
+  <div class="why-inner">
+    <div class="why-top">
+      <h2>Tại Sao Chọn Đức Anh?</h2>
+      <p>Cam kết mang đến sản phẩm tốt nhất với dịch vụ chuyên nghiệp nhất</p>
+    </div>
+    <div class="why-grid">
+      <div class="wcard">
+        <div class="wico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h4>Chất Lượng Cao Cấp</h4>
+        <p>Sử dụng nhựa Đài Loan cao cấp, chống ẩm 100%, chống mối mọt, bền đẹp theo thời gian</p>
+      </div>
+      <div class="wcard">
+        <div class="wico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Đội Ngũ Chuyên Nghiệp</h4>
+        <p>Hơn 50 kỹ thuật viên lành nghề, tư vấn tận tâm, thi công chuẩn kỹ thuật</p>
+      </div>
+      <div class="wcard">
+        <div class="wico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="none"/><path d="M12 6v6l4 2" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Giao Hàng Đúng Hẹn</h4>
+        <p>Cam kết tiến độ thi công, giao hàng đúng hẹn, không phát sinh chi phí ngoài hợp đồng</p>
+      </div>
+      <div class="wcard">
+        <div class="wico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="white" stroke-width="2" fill="none"/></svg>
+        </div>
+        <h4>Bảo Hành 5 Năm</h4>
+        <p>Chính sách bảo hành dài hạn, hỗ trợ sau bán hàng 24/7, sửa chữa miễn phí trong thời gian bảo hành</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS - VAN PHONG -->
+<section class="sec" id="noi-that-van-phong">
+  <div class="sec-hd">
+    <h2 class="sec-title">Nội Thất Văn Phòng</h2>
+  </div>
+  <div class="pgrid">
+    @if (Model.OfficeProducts.Any())
+    {
+        @foreach (var p in Model.OfficeProducts)
+        {
+            <div class="pcard">
+              <div class="img">
+                @if (p.OldPrice.HasValue && p.Price.HasValue && p.OldPrice.Value > 0)
+                {
+                    var discount = (int)(100 - (p.Price.Value / p.OldPrice.Value * 100));
+                    <span class="pbadge">-@discount%</span>
+                }
+                <img src="@p.ImageUrl" alt="Hình ảnh sản phẩm văn phòng: @p.Name" onerror="this.src='https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=400&q=80'"/>
+              </div>
+              <div class="pi">
+                <h3>@p.Name</h3>
+                <div class="prow">
+                    @if (p.Price.HasValue)
+                    {
+                        <span class="pnew">@p.Price.Value.ToString("N0")đ</span>
+                        @if (p.OldPrice.HasValue)
+                        {
+                            <span class="pold">@p.OldPrice.Value.ToString("N0")đ</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="plh">Liên hệ</span>
+                    }
+                </div>
+                <a class="pbtn" href="/ProductDetail/@p.Id" style="text-decoration: none;">Xem Chi Tiết</a>
+              </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--color-muted);">
+            <p>Không tìm thấy sản phẩm văn phòng nào phù hợp.</p>
+        </div>
+    }
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="sec" id="du-an">
+  <div class="sec-hd">
+    <h2 class="sec-title">Dự Án Tiêu Biểu</h2>
+  </div>
+  <div class="proj-grid">
+    @if (Model.Projects.Any())
+    {
+        @foreach (var project in Model.Projects)
+        {
+            <a href="/ProjectDetail/@project.Id" class="pjcard" style="display: block; text-decoration: none;">
+              <img src="@project.ImageUrl" alt="Dự án thi công: @project.Title" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80'"/>
+              <div class="pjover">
+                <span>@project.Title</span>
+              </div>
+            </a>
+        }
+    }
+    else
+    {
+        <div class="pjcard" onclick="location.href='/Projects'">
+          <img src="https://noithathaiminh.com.vn/uploads/project/du-an-noi-that-nhua-chung-cu-cho-khach-hang-o-phuorg-yen-hoa-ha-noi.jpg" alt="Dự án thi công thực tế tại căn hộ chung cư Yên Hòa – Hà Nội" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80'"/>
+          <div class="pjover">
+            <span>Dự Án Chung Cư Yên Hòa – Hà Nội</span>
+          </div>
+        </div>
+        <div class="pjcard" onclick="location.href='/Projects'">
+          <img src="https://noithathaiminh.com.vn/uploads/project/du-an-noi-that-nhua-chung-cu-cho-khach-hang-o-phuong-phu-dien-ha-noi.jpg" alt="Dự án hoàn thiện lắp ráp nội thất nhựa tại Phú Diễn – Hà Nội" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80'"/>
+          <div class="pjover">
+            <span>Dự Án Chung Cư Phú Diễn – Hà Nội</span>
+          </div>
+        </div>
+        <div class="pjcard" onclick="location.href='/Projects'">
+          <img src="https://noithathaiminh.com.vn/uploads/project/du-an-noi-that-nhua-chung-cu-cho-khach-hang-o-hoan-kiem-ha-noi.jpg" alt="Dự án nội thất căn hộ gia đình sang trọng tại quận Hoàn Kiếm – Hà Nội" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80'"/>
+          <div class="pjover">
+            <span>Dự Án Chung Cư Hoàn Kiếm – Hà Nội</span>
+          </div>
+        </div>
+        <div class="pjcard" onclick="location.href='/Projects'">
+          <img src="https://noithathaiminh.com.vn/uploads/project/du-an-noi-that-nhua-sieu-sang-cho-khach-hang-o-hoang-mai-ha-noi.jpg" alt="Không gian phòng khách nội thất cao cấp tại Hoàng Mai – Hà Nội" onerror="this.src='https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80'"/>
+          <div class="pjover">
+            <span>Dự Án Nội Thất Siêu Sang Hoàng Mai – Hà Nội</span>
+          </div>
+        </div>
+    }
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="sec" id="tin-tuc">
+  <div class="sec-hd">
+    <h2 class="sec-title">Tin Tức & Bài Viết</h2>
+  </div>
+  <div class="news-grid">
+    @foreach (var post in Model.Posts)
+    {
+        <div class="ncard">
+          <img src="@post.ImageUrl" alt="Ảnh minh họa bài viết: @post.Title" onerror="this.src='https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80'"/>
+          <div class="ni">
+            <div class="ndate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke="currentColor" stroke-width="2" fill="none"/></svg> @post.CreatedAt.ToString("dd/MM/yyyy")</div>
+            <h3>@post.Title</h3>
+            <p>@post.Summary</p>
+            <a class="nmore" href="/NewsDetail/@post.Id">Đọc tiếp <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          </div>
+        </div>
+    }
+  </div>
+</section>
+
+<!-- CTA BANNER / CONSULTATION FORM -->
+<div class="cta-banner" id="tu-van">
+  <div class="cta-info">
+    <span class="cta-badge">🎁 Ưu đãi đặc biệt</span>
+    <h2 class="cta-title">Tư Vấn Thiết Kế <span class="highlight">Miễn Phí</span> Tận Nơi!</h2>
+    <p class="cta-desc">Đội ngũ chuyên gia từ xưởng Đức Anh sẵn sàng đến tận nhà khảo sát, đo đạc kích thước và báo giá hoàn toàn miễn phí cho bạn.</p>
+    
+    <ul class="cta-features">
+      <li>
+        <span class="feat-icon">✓</span>
+        <div class="feat-text">
+          <strong>Đo đạc & khảo sát trực tiếp</strong>
+          <span>Chúng tôi khảo sát không gian thực tế để thiết kế tối ưu nhất.</span>
+        </div>
+      </li>
+      <li>
+        <span class="feat-icon">✓</span>
+        <div class="feat-text">
+          <strong>Thiết kế phối cảnh 3D miễn phí</strong>
+          <span>Xem bản vẽ chân thực không gian nội thất của bạn trước khi sản xuất.</span>
+        </div>
+      </li>
+      <li>
+        <span class="feat-icon">✓</span>
+        <div class="feat-text">
+          <strong>Cam kết chống nước & mối mọt 100%</strong>
+          <span>Nhựa cao cấp nhập khẩu có tuổi thọ vượt trội so với gỗ công nghiệp.</span>
+        </div>
+      </li>
+    </ul>
+    
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="cta-success-msg" aria-live="polite">
+            <span class="success-icon">✔</span>
+            <span>@TempData["SuccessMessage"]</span>
+        </div>
+    }
+  </div>
+  
+  <div class="cta-btns">
+    <form method="post" class="cta-form">
+      @Html.AntiForgeryToken()
+      
+      <div class="cta-form-header">
+        <h3 class="cta-form-title">Đăng Ký Tư Vấn</h3>
+        <p class="cta-form-subtitle">Điền thông tin bên dưới để xưởng liên hệ lại ngay</p>
+      </div>
+
+      <div asp-validation-summary="All" class="validation-summary-errors" aria-live="polite"></div>
+      
+      <div class="cta-form-group">
+        <label for="contact_fullname">Họ và tên của bạn *</label>
+        <input type="text" id="contact_fullname" asp-for="Contact.FullName" placeholder="Ví dụ: Nguyễn Văn A…" required class="cta-form-input" />
+      </div>
+
+      <div class="cta-form-group">
+        <label for="contact_phone">Số điện thoại liên hệ *</label>
+        <input type="tel" id="contact_phone" asp-for="Contact.PhoneNumber" placeholder="Ví dụ: 0773121234…" required class="cta-form-input" />
+      </div>
+
+      <div class="cta-form-group">
+        <label for="contact_address">Địa chỉ lắp đặt (nếu có)</label>
+        <input type="text" id="contact_address" asp-for="Contact.Address" placeholder="Ví dụ: Ông Bầu, Tỉnh Đồng Tháp…" class="cta-form-input" />
+      </div>
+
+      <div class="cta-form-group">
+        <label for="contact_message">Nội dung cần tư vấn</label>
+        <textarea id="contact_message" asp-for="Contact.Message" placeholder="Ví dụ: Tôi cần tư vấn tủ bếp và tủ quần áo nhựa Ecoplast…" rows="2" class="cta-form-input" style="resize: vertical;"></textarea>
+      </div>
+      
+      <button type="submit" class="cta-form-btn">GỬI YÊU CẦU NGAY</button>
+    </form>
+  </div>
+</div>

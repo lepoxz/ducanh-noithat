@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Admin Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <partial name="_Favicons" />
+</head>
+<body>
+
+    <!-- Sidebar trigger for mobile -->
+    <input type="checkbox" id="sidebar-checkbox" />
+    
+    <!-- Sidebar mobile overlay -->
+    <label for="sidebar-checkbox" class="sidebar-overlay"></label>
+
+    <div class="admin-wrapper">
+        
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-brand">
+                <img class="brand-logo" src="~/images/logo.png" alt="Biểu tượng Đức Anh" asp-append-version="true" />
+                <div class="brand-name">ĐỨC ANH <span>ADMIN</span></div>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="/Admin/Index" class="menu-item-link @(Context.Request.Path.Equals("/Admin/Index", StringComparison.OrdinalIgnoreCase) || Context.Request.Path.Equals("/Admin", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <span class="menu-item-icon">📊</span>
+                        <span>Bảng điều khiển</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/ManageProducts" class="menu-item-link @(Context.Request.Path.Equals("/Admin/ManageProducts", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <span class="menu-item-icon">📦</span>
+                        <span>Quản lý sản phẩm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/ManageCategories" class="menu-item-link @(Context.Request.Path.Equals("/Admin/ManageCategories", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <span class="menu-item-icon">🏷️</span>
+                        <span>Quản lý danh mục</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/ManagePosts" class="menu-item-link @(Context.Request.Path.Equals("/Admin/ManagePosts", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <span class="menu-item-icon">✍</span>
+                        <span>Quản lý bài viết</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/ManageProjects" class="menu-item-link @(Context.Request.Path.Equals("/Admin/ManageProjects", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <span class="menu-item-icon">📐</span>
+                        <span>Quản lý dự án</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/ManageSocialLinks" class="menu-item-link @(Context.Request.Path.Equals("/Admin/ManageSocialLinks", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <span class="menu-item-icon">🌐</span>
+                        <span>Quản lý MXH</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="/" class="menu-item-link" style="padding: 10px; border: 1px dashed rgba(255,255,255,0.15); justify-content: center;">
+                    <span class="menu-item-icon">🏠</span>
+                    <span>Về Trang Chủ</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN SECTION -->
+        <div class="admin-main">
+            
+            <!-- HEADER -->
+            <header class="admin-header">
+                <div class="header-title-section">
+                    <label for="sidebar-checkbox" class="sidebar-toggle">☰</label>
+                    <h1 class="header-title">@ViewData["Title"]</h1>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="user-profile">
+                        <div class="user-avatar">AD</div>
+                        <div class="user-info">
+                            <span class="user-name">@(User.Identity?.Name ?? "Đức Anh Admin")</span>
+                            <span class="user-role">Quản trị viên</span>
+                        </div>
+                    </div>
+                    <form method="post" asp-page="/Admin/Logout" style="margin-left: 10px;">
+                        <button type="submit" class="btn-admin btn-admin-secondary btn-admin-sm" style="display: flex; align-items: center; gap: 4px;">
+                            <span>🚪</span>
+                            <span>Đăng xuất</span>
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            <!-- WORKSPACE CONTENT -->
+            <main class="admin-content">
+                @RenderBody()
+            </main>
+
+            <!-- FOOTER -->
+            <footer class="admin-footer">
+                © 2026 <strong>Nội Thất Nhựa Đức Anh</strong>. Hệ thống quản trị nội bộ v1.0.0
+            </footer>
+        </div>
+    </div>
+
+    <!-- Toast alerts container -->
+    <div id="toast-container"></div>
+
+    <!-- Custom confirmation modal -->
+    <div id="admin-confirm-modal" class="admin-modal-overlay">
+        <div class="admin-modal-card">
+            <div class="admin-modal-body">
+                <span id="confirm-modal-icon" class="admin-modal-icon">⚠️</span>
+                <h4 id="confirm-modal-title" class="admin-modal-title">Xác nhận</h4>
+                <p id="confirm-modal-text" class="admin-modal-text">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
+            </div>
+            <div class="admin-modal-footer">
+                <button id="confirm-modal-cancel" class="btn-admin btn-admin-secondary">Hủy</button>
+                <button id="confirm-modal-ok" class="btn-admin btn-admin-danger">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Scripts for Toast and Modal Alerts -->
+    <script>
+        function showToast(message, type = 'success', title = '') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = `toast-popup toast-${type}`;
+            
+            if (!title) {
+                title = type === 'success' ? 'Thành công' : (type === 'error' ? 'Lỗi hệ thống' : 'Cảnh báo');
+            }
+            
+            const icon = type === 'success' ? '✔' : (type === 'error' ? '✕' : '⚠️');
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icon}</div>
+                <div class="toast-body">
+                    <span class="toast-title">${title}</span>
+                    <span class="toast-message">${message}</span>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+                <div class="toast-progress"></div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger transition for progress bar width
+            const progress = toast.querySelector('.toast-progress');
+            setTimeout(() => {
+                progress.style.transition = 'width 4000ms linear';
+                progress.style.width = '0%';
+            }, 10);
+            
+            // Auto remove after 4s
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        // Global confirmation modal functionality
+        let activeConfirmCallback = null;
+        function showConfirmModal(title, text, confirmCallback, icon = '🗑', isDanger = true) {
+            const modal = document.getElementById('admin-confirm-modal');
+            const titleEl = document.getElementById('confirm-modal-title');
+            const textEl = document.getElementById('confirm-modal-text');
+            const iconEl = document.getElementById('confirm-modal-icon');
+            const okBtn = document.getElementById('confirm-modal-ok');
+            const cancelBtn = document.getElementById('confirm-modal-cancel');
+            
+            titleEl.textContent = title;
+            textEl.textContent = text;
+            iconEl.textContent = icon;
+            
+            if (isDanger) {
+                okBtn.className = 'btn-admin btn-admin-danger';
+            } else {
+                okBtn.className = 'btn-admin btn-admin-primary';
+            }
+            
+            activeConfirmCallback = confirmCallback;
+            modal.classList.add('show');
+            
+            const closeModal = () => {
+                modal.classList.remove('show');
+                okBtn.removeEventListener('click', onOk);
+                cancelBtn.removeEventListener('click', onCancel);
+            };
+            
+            function onOk() {
+                if (activeConfirmCallback) activeConfirmCallback();
+                closeModal();
+            }
+            
+            function onCancel() {
+                closeModal();
+            }
+            
+            okBtn.addEventListener('click', onOk);
+            cancelBtn.addEventListener('click', onCancel);
+        }
+
+        // Intercept form deletes to show custom modal confirmation
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            
+            // Check if form contains an action that represents deletion
+            const isDeleteForm = form.action.includes('handler=Delete') || 
+                                 form.querySelector('button[type="submit"]')?.textContent.includes('Xóa') ||
+                                 form.querySelector('button[type="submit"]')?.className.includes('btn-admin-danger');
+                                 
+            if (isDeleteForm) {
+                if (form.dataset.modalConfirmed === 'true') {
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                const title = form.getAttribute('confirm-title') || 'Xác nhận xóa';
+                const message = form.getAttribute('confirm-message') || 'Bạn có chắc chắn muốn xóa mục này? Hành động này không thể hoàn tác.';
+                const icon = form.getAttribute('confirm-icon') || '🗑';
+                
+                showConfirmModal(title, message, () => {
+                    form.dataset.modalConfirmed = 'true';
+                    form.submit();
+                }, icon, true);
+            }
+        });
+
+        // Auto display toasts when server sets TempData keys
+        @if (TempData["ToastMessage"] != null)
+        {
+            <text>
+            document.addEventListener("DOMContentLoaded", function() {
+                showToast('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(TempData["ToastMessage"]?.ToString() ?? ""))', '@(TempData["ToastType"] ?? "success")');
+            });
+            </text>
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

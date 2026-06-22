@@ -1,0 +1,205 @@
+@page "{id:int}"
+@model noithat_ducanh.Pages.ProjectDetailModel
+@{
+    ViewData["Title"] = $"{Model.Project.Title} - Nội Thất Đức Anh";
+}
+
+<section class="sec" style="min-height: 80vh; padding-top: 30px;">
+    <!-- Breadcrumbs -->
+    <div style="font-size: 13.5px; color: var(--color-muted); margin-bottom: 30px;">
+        <a href="/Index" style="transition: color 0.15s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'">Trang chủ</a> 
+        <span style="margin: 0 6px; color: var(--color-border);">/</span> 
+        <a href="/Projects" style="transition: color 0.15s;" onmouseover="this.style.color='var(--color-primary)'" onmouseout="this.style.color='inherit'">Dự án tiêu biểu</a> 
+        <span style="margin: 0 6px; color: var(--color-border);">/</span> 
+        <span style="color: var(--color-text); font-weight: 700;">@Model.Project.Title</span>
+    </div>
+
+    <!-- Main Content Layout (Layout A: Article + Sidebar Specs) -->
+    <div class="project-detail-grid" style="display: grid; gap: 40px; align-items: start; margin-bottom: 60px;">
+        
+        <!-- Left: Project Article Content -->
+        <article style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: 20px; padding: 35px; box-shadow: var(--shadow-card);">
+            <!-- Title -->
+            <h1 style="font-size: 26px; font-weight: 900; color: var(--color-primary-dark); line-height: 1.35; margin-bottom: 16px;">
+                @Model.Project.Title
+            </h1>
+
+            <div style="font-size: 13.5px; color: var(--color-muted); margin-bottom: 24px; border-bottom: 1px solid var(--color-border); padding-bottom: 12px; display: flex; gap: 15px; align-items: center;">
+                <span>📂 Phân loại: <strong>@Model.Project.Category</strong></span>
+                <span>📅 Đăng ngày: @Model.Project.CreatedAt.ToString("dd/MM/yyyy")</span>
+            </div>
+
+            <!-- Banner / Main Image -->
+            <div style="position: relative; border-radius: var(--radius-image); overflow: hidden; border: 1px solid var(--color-border); aspect-ratio: 16/9; max-height: 480px; margin-bottom: 24px; background-color: #fafafa;">
+                <img src="@Model.Project.ImageUrl" alt="Hình ảnh chính dự án: @Model.Project.Title" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80'" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+
+            <!-- Summary Blockquote -->
+            <div style="background-color: var(--color-background); border-left: 4px solid var(--color-accent); border-radius: 4px; padding: 18px 22px; margin-bottom: 26px; font-style: italic; font-weight: 500; color: var(--color-text); line-height: 1.65; font-size: 15px;">
+                @Model.Project.Summary
+            </div>
+
+            <!-- Rich Description Content -->
+            <div style="line-height: 1.8; color: var(--color-text); font-size: 15.5px;" class="project-content-body">
+                @Html.Raw(Model.Project.Content)
+            </div>
+        </article>
+
+        <!-- Right: Sidebar Specifications -->
+        <aside style="display: flex; flex-direction: column; gap: 24px;">
+            <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 25px; box-shadow: var(--shadow-card);">
+                <h3 style="font-size: 17px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 16px; border-bottom: 2px solid var(--color-accent); padding-bottom: 8px; display: inline-block;">
+                    📋 Thông Tin Dự Án
+                </h3>
+                
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; font-size: 14px;">
+                    <li style="display: flex; flex-direction: column; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+                        <span style="font-weight: 700; color: var(--color-muted); margin-bottom: 2px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Chủ đầu tư / Khách hàng</span>
+                        <span style="font-weight: 700; color: var(--color-text); font-size: 14.5px;">@(string.IsNullOrEmpty(Model.Project.CustomerName) ? "Gia đình khách hàng" : Model.Project.CustomerName)</span>
+                    </li>
+                    <li style="display: flex; flex-direction: column; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+                        <span style="font-weight: 700; color: var(--color-muted); margin-bottom: 2px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Địa điểm thi công</span>
+                        <span style="font-weight: 700; color: var(--color-text); font-size: 14.5px;">📍 @(string.IsNullOrEmpty(Model.Project.Location) ? "Hà Nội" : Model.Project.Location)</span>
+                    </li>
+                    <li style="display: flex; flex-direction: column; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+                        <span style="font-weight: 700; color: var(--color-muted); margin-bottom: 2px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Thời gian hoàn thành</span>
+                        <span style="font-weight: 700; color: var(--color-text); font-size: 14.5px;">
+                            @(Model.Project.CompletionDate.HasValue ? Model.Project.CompletionDate.Value.ToString("MM/yyyy") : "Đang thực hiện")
+                        </span>
+                    </li>
+                    <li style="display: flex; flex-direction: column; border-bottom: 1px solid var(--color-border); padding-bottom: 8px;">
+                        <span style="font-weight: 700; color: var(--color-muted); margin-bottom: 2px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Chất liệu thi công</span>
+                        <span style="font-weight: 700; color: var(--color-text); font-size: 14.5px;">Nhựa nội thất cao cấp chống mối mọt</span>
+                    </li>
+                    <li style="display: flex; flex-direction: column; padding-bottom: 4px;">
+                        <span style="font-weight: 700; color: var(--color-muted); margin-bottom: 2px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;">Đơn vị thiết kế & thi công</span>
+                        <span style="font-weight: 700; color: var(--color-primary); font-size: 14.5px;">Nội Thất Đức Anh</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Banner Call to Action -->
+            <div style="background-color: var(--color-primary-dark); color: #fff; border-radius: var(--radius-card); padding: 25px; text-align: center; box-shadow: var(--shadow-card); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background-color: var(--color-accent); opacity: 0.15; border-radius: 50%;"></div>
+                <h3 style="font-size: 18px; font-weight: 800; color: var(--color-accent); margin-bottom: 12px;">Đăng Ký Khảo Sát & Thiết Kế</h3>
+                <p style="font-size: 13px; line-height: 1.6; opacity: 0.9; margin-bottom: 20px;">Để sở hữu căn hộ hoàn thiện chất lượng sắc nét như trên, hãy để lại thông tin để kiến trúc sư Đức Anh đo đạc tư vấn tận nhà miễn phí.</p>
+                <a href="/Contact" class="btn-acc" style="display: inline-block; width: 100%; text-align: center; text-decoration: none; padding: 12px; font-size: 14px;">Gửi yêu cầu thiết kế</a>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Extra Installation Gallery (Bottom Section) -->
+    @if (Model.ProjectImages.Any())
+    {
+        <div style="margin-bottom: 60px;">
+            <div class="sec-hd" style="margin-bottom: 24px;">
+                <h2 class="sec-title" style="font-size: 21px; color: var(--color-primary-dark);">📸 Thư Viện Ảnh Thực Tế Công Trình</h2>
+                <p style="color: var(--color-muted); margin-top: 4px; font-size: 14px;">Hình ảnh chi tiết từng góc phòng, ngăn tủ được bàn giao thực tế tại căn hộ</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px;">
+                @foreach (var img in Model.ProjectImages)
+                {
+                    <div class="install-img-card" onclick="openLightbox('@img')" style="position: relative; border-radius: 12px; overflow: hidden; border: 1.5px solid var(--color-border); aspect-ratio: 4/3; cursor: pointer; background: #fafafa; box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: transform 0.3s ease;">
+                        <img src="@img" alt="Ảnh thi công phụ dự án" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" />
+                        <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; transition: opacity 0.2s ease;">🔍</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="lightbox-overlay" onclick="closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="lightbox-img" onclick="event.stopPropagation()">
+    </div>
+</section>
+
+<style>
+    .project-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .install-img-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(181, 18, 27, 0.12);
+    }
+    .install-img-card:hover img {
+        transform: scale(1.06);
+    }
+    .install-img-card:hover div {
+        opacity: 1 !important;
+    }
+
+    /* Lightbox CSS */
+    .lightbox-overlay {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.92);
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+    .lightbox-overlay.show {
+        display: flex;
+        opacity: 1;
+    }
+    .lightbox-content {
+        max-width: 90%;
+        max-height: 85%;
+        border-radius: 8px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        transform: scale(0.95);
+        transition: transform 0.25s ease;
+    }
+    .lightbox-overlay.show .lightbox-content {
+        transform: scale(1);
+    }
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.2s;
+    }
+    .lightbox-close:hover {
+        color: var(--color-accent);
+    }
+    
+    @@media (min-width: 992px) {
+        .project-detail-grid {
+            grid-template-columns: 2.3fr 1fr;
+        }
+    }
+</style>
+
+<script>
+    function openLightbox(src) {
+        const modal = document.getElementById('lightbox-modal');
+        const img = document.getElementById('lightbox-img');
+        img.src = src;
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+        const modal = document.getElementById('lightbox-modal');
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeLightbox();
+        }
+    });
+</script>

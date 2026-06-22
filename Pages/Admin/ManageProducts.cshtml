@@ -1,0 +1,327 @@
+@page
+@model noithat_ducanh.Pages.Admin.ManageProductsModel
+@{
+    ViewData["Title"] = "Quản Lý Sản Phẩm";
+}
+
+
+<div class="admin-split-layout">
+    
+    <!-- LEFT PANEL: FORM SECTION -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                @(Model.IsEditMode ? "✍ Sửa Sản Phẩm" : "➕ Thêm Sản Phẩm Mới")
+            </h3>
+        </div>
+        
+        <form method="post" asp-route-editId="@(Model.IsEditMode ? Model.InputProduct.Id : null)" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 16px;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="InputProduct.Id" />
+            
+            <div class="form-group">
+                <label class="form-label">Tên sản phẩm *</label>
+                <input type="text" asp-for="InputProduct.Name" required class="form-control" placeholder="Ví dụ: Tủ bếp Acrylic bóng gương..." />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Danh mục sản phẩm *</label>
+                <select asp-for="InputProduct.Category" required class="form-control" style="background-color: #ffffff;">
+                    <option value="">-- Chọn danh mục --</option>
+                    @foreach (var c in Model.Categories)
+                    {
+                        <option value="@c.Name">@c.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Giá bán (để trống nếu hiển thị "Liên hệ")</label>
+                <input type="number" asp-for="InputProduct.Price" class="form-control" placeholder="Ví dụ: 3500000" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Giá cũ (nếu có giảm giá)</label>
+                <input type="number" asp-for="InputProduct.OldPrice" class="form-control" placeholder="Ví dụ: 4000000" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Hình ảnh sản phẩm</label>
+                <div style="margin-bottom: 8px;">
+                    <label class="form-label" style="font-size: 12px; font-weight: 500; color: var(--admin-text-muted);">Tải ảnh từ máy tính (Khuyên dùng)</label>
+                    <input type="file" name="ProductImageFile" accept="image/*" class="form-control" />
+                </div>
+                <div>
+                    <label class="form-label" style="font-size: 12px; font-weight: 500; color: var(--admin-text-muted);">Hoặc nhập liên kết ảnh ngoài (URL)</label>
+                    <input type="text" asp-for="InputProduct.ImageUrl" class="form-control" placeholder="Nhập URL ảnh..." />
+                </div>
+                @if (Model.IsEditMode && !string.IsNullOrEmpty(Model.InputProduct.ImageUrl))
+                {
+                    <div style="margin-top: 12px; text-align: center; background: #fafafa; padding: 10px; border-radius: 6px; border: 1px solid var(--admin-border);">
+                        <span style="font-size: 11px; color: var(--admin-text-muted); display: block; margin-bottom: 5px;">Ảnh hiện tại:</span>
+                        <img src="@Model.InputProduct.ImageUrl" alt="Preview Image" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=120&q=80'" style="max-height: 100px; border-radius: 4px; border: 1px solid var(--admin-border); object-fit: cover; max-width: 100%;" />
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mô tả sản phẩm</label>
+                <textarea asp-for="InputProduct.Description" rows="3" class="form-control" style="resize: vertical;" placeholder="Nhập chi tiết thông tin sản phẩm nội thất..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Liên kết Video thi công (Mỗi dòng một liên kết YouTube)</label>
+                <textarea asp-for="InputProduct.VideoUrls" rows="3" class="form-control" placeholder="Ví dụ:&#10;https://www.youtube.com/watch?v=xxx&#10;https://youtu.be/yyy" style="resize: vertical; font-family: monospace; font-size: 12.5px;"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Tải lên ảnh lắp đặt thực tế (Chọn nhiều ảnh)</label>
+                <input type="file" name="InstallationImageFiles" accept="image/*" multiple class="form-control" />
+                
+                @if (Model.IsEditMode && !string.IsNullOrEmpty(Model.InputProduct.InstallationImageUrls))
+                {
+                    var images = Model.InputProduct.InstallationImageUrls.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (images.Any())
+                    {
+                        <div style="margin-top: 12px;">
+                            <span class="form-label" style="font-size: 12px; font-weight: 500; color: var(--admin-text-muted); display: block; margin-bottom: 8px;">Ảnh thi công hiện tại (@images.Length):</span>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px;">
+                                @for (int i = 0; i < images.Length; i++)
+                                {
+                                    var img = images[i];
+                                    <div style="position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--admin-border); aspect-ratio: 1/1; background: #f9f9f9; display: flex; align-items: center; justify-content: center;">
+                                        <img src="@img" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=80&q=80'" />
+                                        <button type="submit" form="delete-install-img-form-@i" class="btn-admin btn-admin-danger" style="position: absolute; top: 2px; right: 2px; width: 22px; height: 22px; padding: 0; font-size: 10px; line-height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; min-width: unset; box-shadow: 0 1px 4px rgba(0,0,0,0.3);" title="Xóa ảnh này">✕</button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="form-group" style="border: 1px solid var(--admin-border); padding: 12px; border-radius: 8px; background: #fafafa; margin-top: 10px;">
+                <label class="form-label" style="font-weight: 700; color: var(--admin-text-main); margin-bottom: 4px;">📸 So sánh Trước - Sau Thi Công</label>
+                <div style="font-size: 11.5px; color: var(--admin-primary); background: #fdf2f2; border: 1px solid #fde8e8; padding: 8px 10px; border-radius: 6px; margin-bottom: 12px; line-height: 1.4;">
+                    💡 <strong>Khuyên dùng:</strong> Tải lên các ảnh có kích thước tối thiểu từ <strong>800x600px</strong> hoặc <strong>1024x768px</strong> (tỷ lệ <strong>4:3</strong> hoặc <strong>16:9</strong>). Hai bức ảnh Trước và Sau của cùng một góc nên được chụp cùng góc độ và cắt (crop) bằng kích thước khớp nhau để hiển thị song song cân đối, tránh lệch tỷ lệ ngoài trang chi tiết.
+                </div>
+                
+                @if (Model.IsEditMode)
+                {
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label class="form-label" style="font-size: 11.5px; font-weight: 500;">Ảnh Trước thi công thô</label>
+                                <input type="file" name="ComparisonBeforeFile" accept="image/*" class="form-control" />
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 11.5px; font-weight: 500;">Ảnh Sau hoàn thiện</label>
+                                <input type="file" name="ComparisonAfterFile" accept="image/*" class="form-control" />
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size: 11.5px; font-weight: 500;">Mô tả góc thi công / Không gian</label>
+                            <input type="text" name="ComparisonDescription" class="form-control" placeholder="Ví dụ: Góc nhìn từ cửa, Góc chậu rửa..." />
+                        </div>
+                        <span style="font-size: 11px; color: var(--admin-text-muted);">* Chọn cả 2 ảnh và điền mô tả để tải lên cặp so sánh mới khi nhấn Lưu/Cập nhật sản phẩm.</span>
+                    </div>
+
+                    @if (Model.InputProduct.Comparisons != null && Model.InputProduct.Comparisons.Any())
+                    {
+                        <div style="margin-top: 15px; border-top: 1px solid var(--admin-border); padding-top: 12px;">
+                            <span class="form-label" style="font-size: 12px; font-weight: 600; display: block; margin-bottom: 10px;">Cặp ảnh so sánh hiện có (@Model.InputProduct.Comparisons.Count):</span>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px;">
+                                @for (int i = 0; i < Model.InputProduct.Comparisons.Count; i++)
+                                {
+                                    var comp = Model.InputProduct.Comparisons[i];
+                                    <div style="background: #ffffff; border: 1px solid var(--admin-border); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 8px; position: relative;">
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                            <div style="text-align: center;">
+                                                <span style="font-size: 10px; color: var(--admin-text-muted); display: block; margin-bottom: 2px;">Trước</span>
+                                                <img src="@comp.BeforeImageUrl" style="height: 60px; width: 100%; object-fit: cover; border-radius: 4px; border: 1px solid var(--admin-border);" />
+                                            </div>
+                                            <div style="text-align: center;">
+                                                <span style="font-size: 10px; color: var(--admin-text-muted); display: block; margin-bottom: 2px;">Sau</span>
+                                                <img src="@comp.AfterImageUrl" style="height: 60px; width: 100%; object-fit: cover; border-radius: 4px; border: 1px solid var(--admin-border);" />
+                                            </div>
+                                        </div>
+                                        <div style="font-size: 11.5px; font-weight: 500; text-align: center; color: var(--admin-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="@comp.Description">
+                                            📍 @comp.Description
+                                        </div>
+                                        <button type="submit" form="delete-comp-form-@comp.Id" class="btn-admin btn-admin-danger" style="margin-top: 4px; padding: 4px 8px; font-size: 10.5px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 4px; min-width: unset; height: auto;">
+                                            ✕ Xóa
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="font-size: 12px; color: var(--admin-text-muted); padding: 5px; text-align: center;">
+                        * Cấu hình ảnh Trước/Sau sau khi sản phẩm đã được thêm mới.
+                    </div>
+                }
+            </div>
+
+            <label class="checkbox-group" for="IsActiveCheck">
+                <input type="checkbox" asp-for="InputProduct.IsActive" id="IsActiveCheck" class="checkbox-control" />
+                <span class="form-label" style="font-weight: 600; cursor: pointer; user-select: none;">Hiển thị trên website</span>
+            </label>
+ 
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit" class="btn-admin btn-admin-primary" style="flex: 1; padding: 11px 20px;">
+                    @(Model.IsEditMode ? "Cập Nhật" : "Thêm Mới")
+                </button>
+                @if (Model.IsEditMode)
+                {
+                    <a href="/Admin/ManageProducts" class="btn-admin btn-admin-secondary" style="padding: 11px 20px; text-align: center;">Hủy sửa</a>
+                }
+            </div>
+        </form>
+
+        @if (Model.IsEditMode && !string.IsNullOrEmpty(Model.InputProduct.InstallationImageUrls))
+        {
+            var images = Model.InputProduct.InstallationImageUrls.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            @for (int i = 0; i < images.Length; i++)
+            {
+                var img = images[i];
+                <form id="delete-install-img-form-@i" method="post" asp-page-handler="DeleteInstallationImage" asp-route-productId="@Model.InputProduct.Id" asp-route-imageUrl="@img" style="display:none;" confirm-title="Xóa ảnh thi công" confirm-message="Bạn có chắc chắn muốn xóa ảnh lắp đặt thực tế này không?">
+                    @Html.AntiForgeryToken()
+                </form>
+            }
+        }
+        @if (Model.IsEditMode && Model.InputProduct.Comparisons != null && Model.InputProduct.Comparisons.Any())
+        {
+            @foreach (var comp in Model.InputProduct.Comparisons)
+            {
+                <form id="delete-comp-form-@comp.Id" method="post" asp-page-handler="DeleteComparison" asp-route-comparisonId="@comp.Id" asp-route-productId="@Model.InputProduct.Id" style="display:none;" confirm-title="Xóa cặp ảnh so sánh" confirm-message="Bạn có chắc chắn muốn xóa cặp ảnh Trước - Sau thi công này không?">
+                    @Html.AntiForgeryToken()
+                </form>
+            }
+        }
+    </div>
+
+    <!-- RIGHT PANEL: LIST SECTION -->
+    <div class="content-card">
+        <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
+            <h3 class="card-title">📦 Danh Sách Sản Phẩm (@Model.TotalItems)</h3>
+            
+            <form method="get" style="display: flex; gap: 6px; min-width: 280px; max-width: 400px; margin-left: auto;">
+                <input type="text" name="SearchQuery" value="@Model.SearchQuery" class="form-control form-control-sm" placeholder="Tìm tên hoặc danh mục..." style="padding: 6px 10px; font-size: 13px;" />
+                <button type="submit" class="btn-admin btn-admin-primary btn-admin-sm" style="padding: 6px 12px;">Tìm</button>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <a href="/Admin/ManageProducts" class="btn-admin btn-admin-secondary btn-admin-sm" style="padding: 6px 12px; display: flex; align-items: center; justify-content: center; text-decoration: none;">Xóa</a>
+                }
+            </form>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">Ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá bán</th>
+                        <th>Trạng thái</th>
+                        <th style="text-align: right; width: 130px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var p in Model.Products)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@p.ImageUrl" alt="@p.Name" onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=80&q=80'" style="width: 55px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid var(--admin-border); display: block;" />
+                            </td>
+                            <td style="font-weight: 700; color: var(--admin-text-main);">
+                                @p.Name
+                            </td>
+                            <td style="font-weight: 600; color: var(--admin-text-muted); font-size: 13.5px;">
+                                @p.Category
+                            </td>
+                            <td style="font-weight: 700;">
+                                @if (p.Price.HasValue)
+                                {
+                                    <span style="color: var(--admin-primary);">@p.Price.Value.ToString("N0")đ</span>
+                                    @if (p.OldPrice.HasValue)
+                                    {
+                                        <div style="font-size: 11.5px; color: var(--admin-text-muted); text-decoration: line-through; font-weight: 500;">@p.OldPrice.Value.ToString("N0")đ</div>
+                                    }
+                                }
+                                else
+                                {
+                                    <span style="color: var(--admin-text-muted); font-weight: 600; font-size: 13px;">Liên hệ</span>
+                                }
+                            </td>
+                            <td>
+                                @if (p.IsActive)
+                                {
+                                    <span class="badge badge-success">✓ Hiện</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning">✕ Ẩn</span>
+                                }
+                            </td>
+                            <td style="text-align: right; white-space: nowrap;">
+                                <div class="btn-group">
+                                    <a href="/Admin/ManageProducts?editId=@p.Id" class="btn-admin btn-admin-secondary btn-admin-sm">Sửa</a>
+                                    
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id" style="display: inline;" confirm-title="Xóa sản phẩm" confirm-message="Bạn có chắc chắn muốn xóa sản phẩm này không? Hành động này sẽ loại bỏ hoàn toàn sản phẩm khỏi trang web.">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm">Xóa</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        @if (Model.TotalPages > 1)
+        {
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-top: 1px solid var(--admin-border); background-color: var(--admin-bg-alt); border-bottom-left-radius: var(--radius-card); border-bottom-right-radius: var(--radius-card);">
+                <span style="font-size: 13px; color: var(--admin-text-muted);">
+                    Hiển thị trang <strong>@Model.PageNumber</strong> / @Model.TotalPages (Tổng @Model.TotalItems sản phẩm)
+                </span>
+                <div style="display: flex; gap: 4px;">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <a href="/Admin/ManageProducts?PageNumber=@(Model.PageNumber - 1)@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" class="btn-admin btn-admin-secondary btn-admin-sm" style="text-decoration: none; padding: 5px 10px;">◀ Trước</a>
+                    }
+                    else
+                    {
+                        <span class="btn-admin btn-admin-secondary btn-admin-sm" style="opacity: 0.5; cursor: not-allowed; padding: 5px 10px;">◀ Trước</span>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == Model.PageNumber)
+                        {
+                            <span class="btn-admin btn-admin-primary btn-admin-sm" style="font-weight: bold; padding: 5px 10px;">@i</span>
+                        }
+                        else
+                        {
+                            <a href="/Admin/ManageProducts?PageNumber=@i@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" class="btn-admin btn-admin-secondary btn-admin-sm" style="text-decoration: none; padding: 5px 10px;">@i</a>
+                        }
+                    }
+
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <a href="/Admin/ManageProducts?PageNumber=@(Model.PageNumber + 1)@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"&SearchQuery={Model.SearchQuery}")" class="btn-admin btn-admin-secondary btn-admin-sm" style="text-decoration: none; padding: 5px 10px;">Sau ▶</a>
+                    }
+                    else
+                    {
+                        <span class="btn-admin btn-admin-secondary btn-admin-sm" style="opacity: 0.5; cursor: not-allowed; padding: 5px 10px;">Sau ▶</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    
+</div>

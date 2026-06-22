@@ -1,0 +1,198 @@
+@page
+@model noithat_ducanh.Pages.ContactModel
+@{
+    ViewData["Title"] = "Liên Hệ - Nội Thất Đức Anh";
+}
+
+<div class="wrap" style="max-width: 1200px; margin: auto; padding: 40px 24px; min-height: 80vh;">
+    <!-- Breadcrumbs -->
+    <nav aria-label="Breadcrumb" style="margin-bottom: 24px; font-size: 14px; color: var(--color-muted);">
+        <a href="/" style="color: var(--color-primary); text-decoration: none; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='var(--color-accent)'" onmouseout="this.style.color='var(--color-primary)'">Trang chủ</a>
+        <span style="margin: 0 8px;">/</span>
+        <span style="color: var(--color-text);">Liên hệ</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div style="margin-bottom: 40px; text-align: center;">
+        <h1 style="font-size: 32px; font-weight: 900; color: var(--color-primary-dark); margin-bottom: 12px;">Liên Hệ Với Chúng Tôi</h1>
+        <p style="color: var(--color-muted); font-size: 15.5px; max-width: 650px; margin: 0 auto; line-height: 1.6;">
+            Quý khách có nhu cầu thiết kế, thi công tủ bếp, tủ quần áo, giường ngủ nhựa hoặc các sản phẩm nội thất nhựa cao cấp khác? Hãy liên hệ ngay với Đức Anh để nhận tư vấn và báo giá miễn phí.
+        </p>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="contact-grid" style="display: grid; gap: 40px; align-items: start;">
+        
+        <!-- Left Column: Contact info & Maps -->
+        <div style="display: flex; flex-direction: column; gap: 28px;">
+            <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 28px; box-shadow: var(--shadow-card);">
+                <h2 style="font-size: 20px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 20px; border-bottom: 2px solid var(--color-accent); padding-bottom: 8px; display: inline-block;">
+                    Thông tin liên hệ
+                </h2>
+                
+                <div style="display: flex; flex-direction: column; gap: 18px;">
+                    <div style="display: flex; gap: 14px; align-items: flex-start;">
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background-color: var(--color-background); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px; height:18px; fill:currentColor;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 14.5px; font-weight: 800; margin-bottom: 4px; color: var(--color-text);">Địa chỉ xưởng sản xuất</h3>
+                            <p style="font-size: 14px; color: var(--color-muted); line-height: 1.5;">Ông Bầu, Tỉnh Đồng Tháp</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 14px; align-items: flex-start;">
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background-color: var(--color-background); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px; height:18px; fill:currentColor;"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 14.5px; font-weight: 800; margin-bottom: 4px; color: var(--color-text);">Hotline & Zalo</h3>
+                            <p style="font-size: 14px; color: var(--color-muted); line-height: 1.5;">
+                                <a href="tel:0773121234" style="color: var(--color-primary); font-weight: 700; text-decoration: none;">0773 12 1234</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 14px; align-items: flex-start;">
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background-color: var(--color-background); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 14.5px; font-weight: 800; margin-bottom: 4px; color: var(--color-text);">Email hỗ trợ</h3>
+                            <p style="font-size: 14px; color: var(--color-muted); line-height: 1.5;">noithatnhua.ducanh@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 14px; align-items: flex-start;">
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background-color: var(--color-background); display: flex; align-items: center; justify-content: center; color: var(--color-primary); flex-shrink: 0;">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px; height:18px; fill:currentColor;"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 14.5px; font-weight: 800; margin-bottom: 4px; color: var(--color-text);">Thời gian làm việc</h3>
+                            <p style="font-size: 13.5px; color: var(--color-muted); line-height: 1.5; margin-bottom: 4px;">🕐 Thứ 2 – Thứ 7: 8:00 – 20:00</p>
+                            <p style="font-size: 13.5px; color: var(--color-muted); line-height: 1.5;">🕐 Chủ nhật: 9:00 – 17:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Map Iframe (WIG compliant with title) -->
+            <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 12px; box-shadow: var(--shadow-card); overflow: hidden;">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3925.3223019313885!2d105.74619477484439!3d10.315993888863611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310a65bcaea1efd3%3A0xb24d081f2df536bf!2zQ-G6p3Ugw55uZyBC4bqndSwgVGhhbmggTeG7uSwgVGhhbmggQsOsbmgsIMSQ4buTbmcgVGjDoXA!5e0!3m2!1svi!2s!4v1718000000000!5m2!1svi!2s" 
+                    width="100%" 
+                    height="320" 
+                    style="border:0; border-radius: 10px; display: block;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade" 
+                    title="Bản đồ định vị cửa hàng Nội Thất Đức Anh tại Ông Bầu, Tỉnh Đồng Tháp">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Right Column: Accessible Form -->
+        <div style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 32px; box-shadow: var(--shadow-card);">
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 20px; border-bottom: 2px solid var(--color-accent); padding-bottom: 8px; display: inline-block;">
+                Gửi yêu cầu tư vấn
+            </h2>
+
+            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+            {
+                <div style="background-color: rgba(0, 184, 148, 0.1); border: 1.5px solid var(--color-green); color: #008767; border-radius: 8px; padding: 14px 16px; font-size: 14.5px; font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; gap: 10px;">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; flex-shrink: 0;"><polyline points="20 6 9 17 4 12"/></svg>
+                    @Model.SuccessMessage
+                </div>
+            }
+
+            <form method="post">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- FullName -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="contact-fullname" style="font-size: 13.5px; font-weight: 700; color: var(--color-text);">
+                            Họ và tên <span style="color: var(--color-primary)">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="contact-fullname" 
+                            asp-for="Contact.FullName" 
+                            placeholder="Nhập họ tên của bạn…" 
+                            required 
+                            style="width: 100%; border: 1.5px solid var(--color-border); background-color: var(--color-background); border-radius: 8px; padding: 12px 14px; font-size: 14.5px; color: var(--color-text); outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--color-primary)'" 
+                            onblur="this.style.borderColor='var(--color-border)'" />
+                    </div>
+
+                    <!-- PhoneNumber -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="contact-phone" style="font-size: 13.5px; font-weight: 700; color: var(--color-text);">
+                            Số điện thoại <span style="color: var(--color-primary)">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="contact-phone" 
+                            asp-for="Contact.PhoneNumber" 
+                            placeholder="Nhập số điện thoại…" 
+                            required 
+                            style="width: 100%; border: 1.5px solid var(--color-border); background-color: var(--color-background); border-radius: 8px; padding: 12px 14px; font-size: 14.5px; color: var(--color-text); outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--color-primary)'" 
+                            onblur="this.style.borderColor='var(--color-border)'" />
+                    </div>
+
+                    <!-- Address -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="contact-address" style="font-size: 13.5px; font-weight: 700; color: var(--color-text);">
+                            Địa chỉ (Tùy chọn)
+                        </label>
+                        <input 
+                            type="text" 
+                            id="contact-address" 
+                            asp-for="Contact.Address" 
+                            placeholder="Nhập địa chỉ nhà của bạn…" 
+                            style="width: 100%; border: 1.5px solid var(--color-border); background-color: var(--color-background); border-radius: 8px; padding: 12px 14px; font-size: 14.5px; color: var(--color-text); outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--color-primary)'" 
+                            onblur="this.style.borderColor='var(--color-border)'" />
+                    </div>
+
+                    <!-- Message -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="contact-message" style="font-size: 13.5px; font-weight: 700; color: var(--color-text);">
+                            Lời nhắn / Yêu cầu tư vấn
+                        </label>
+                        <textarea 
+                            id="contact-message" 
+                            asp-for="Contact.Message" 
+                            rows="5" 
+                            placeholder="Ví dụ: Tôi muốn tư vấn thiết kế tủ bếp Acrylic chữ L cho căn hộ chung cư 70m2…" 
+                            style="width: 100%; border: 1.5px solid var(--color-border); background-color: var(--color-background); border-radius: 8px; padding: 12px 14px; font-size: 14.5px; color: var(--color-text); outline: none; transition: border-color 0.2s; resize: vertical; min-height: 100px;"
+                            onfocus="this.style.borderColor='var(--color-primary)'" 
+                            onblur="this.style.borderColor='var(--color-border)'"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        style="width: 100%; padding: 14px; border: none; background-color: var(--color-primary); color: #fff; font-weight: 800; font-size: 15px; border-radius: var(--radius-button); cursor: pointer; transition: transform 0.2s, background-color 0.2s; box-shadow: 0 4px 12px rgba(181, 18, 27, 0.25);"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.backgroundColor='var(--color-primary-dark)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.backgroundColor='var(--color-primary)';"
+                        onfocus="this.style.outline='2.5px solid var(--color-accent)'; this.style.outlineOffset='2px';">
+                        Gửi Yêu Cầu Tư Vấn
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .contact-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @@media (max-width: 768px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
