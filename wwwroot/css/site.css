@@ -1732,6 +1732,10 @@ nav ul li:hover>.sub {
 
 @media (max-width: 860px) {
 
+  .hero-arrow {
+    display: none;
+  }
+
   .header {
     position: relative;
   }

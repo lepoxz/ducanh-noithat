@@ -22,6 +22,31 @@ if (slides.length > 0) {
     setInterval(function() {
         changeSlide(1);
     }, 5000);
+
+    // Add touch swipe support for mobile
+    var heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        var touchStartX = 0;
+        var touchEndX = 0;
+        
+        heroSection.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        heroSection.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+        
+        function handleSwipe() {
+            var threshold = 50; // minimum swipe distance in pixels
+            if (touchEndX < touchStartX - threshold) {
+                changeSlide(1); // Swipe left -> Next
+            } else if (touchEndX > touchStartX + threshold) {
+                changeSlide(-1); // Swipe right -> Prev
+            }
+        }
+    }
 }
 
 // PRODUCT TABS
