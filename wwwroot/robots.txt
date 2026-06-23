@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /Admin/
+
+Sitemap: http://noithatnhuaducanh.vn/sitemap.xml
