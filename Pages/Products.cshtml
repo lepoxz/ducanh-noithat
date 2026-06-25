@@ -15,10 +15,10 @@
     </div>
 
     <!-- Search & Filter Layout -->
-    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 32px; align-items: start; margin-top: 20px;">
+    <div class="catalog-container">
         
         <!-- Sidebar Filters -->
-        <aside style="background-color: var(--color-surface); border: 1.5px solid var(--color-border); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-card);">
+        <aside class="catalog-sidebar">
             <!-- Search block -->
             <div style="margin-bottom: 24px;">
                 <h3 style="font-size: 15px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 12px;">Tìm kiếm</h3>
@@ -37,7 +37,7 @@
             <!-- Categories block -->
             <div>
                 <h3 style="font-size: 15px; font-weight: 800; color: var(--color-primary-dark); margin-bottom: 12px;">Danh mục</h3>
-                <ul style="display: flex; flex-direction: column; gap: 6px;">
+                <ul class="catalog-categories">
                     <li>
                         <a href="/Products@(string.IsNullOrEmpty(Model.SearchQuery) ? "" : $"?SearchQuery={Model.SearchQuery}")" 
                            style="display: block; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: 700; transition: background-color 0.2s; @(string.IsNullOrEmpty(Model.Category) ? "background-color: var(--color-primary); color: white;" : "color: var(--color-text);")"
