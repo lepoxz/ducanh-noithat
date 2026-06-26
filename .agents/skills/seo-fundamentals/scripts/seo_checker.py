@@ -68,8 +68,8 @@ def is_page_file(file_path: Path) -> bool:
     if any(p in stem for p in page_names):
         return True
     
-    # HTML files are usually pages
-    if file_path.suffix.lower() in ['.html', '.htm']:
+    # HTML/cshtml files are usually pages
+    if file_path.suffix.lower() in ['.html', '.htm', '.cshtml']:
         return True
     
     return False
@@ -77,7 +77,7 @@ def is_page_file(file_path: Path) -> bool:
 
 def find_pages(project_path: Path) -> list:
     """Find page files to check."""
-    patterns = ['**/*.html', '**/*.htm', '**/*.jsx', '**/*.tsx']
+    patterns = ['**/*.html', '**/*.htm', '**/*.jsx', '**/*.tsx', '**/*.cshtml']
     
     files = []
     for pattern in patterns:
@@ -191,10 +191,10 @@ def main():
             print(f"  [{count}] {issue}")
         
         print(f"\nAffected files ({len(all_issues)}):")
-        for item in all_issues[:5]:
-            print(f"  - {item['file']}")
-        if len(all_issues) > 5:
-            print(f"  ... and {len(all_issues) - 5} more")
+        for item in all_issues:
+            print(f"  - {item['file']}:")
+            for issue in item["issues"]:
+                print(f"    * {issue}")
     else:
         print("\n[OK] No SEO issues found!")
     

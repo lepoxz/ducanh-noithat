@@ -2,6 +2,12 @@
 @model noithat_ducanh.Pages.NewsDetailModel
 @{
     ViewData["Title"] = $"{Model.Post.Title} - Tin Tức - Nội Thất Đức Anh";
+    
+    var cleanSummary = Model.Post.Summary ?? "";
+    if (cleanSummary.Length > 150) {
+        cleanSummary = cleanSummary.Substring(0, 147) + "...";
+    }
+    ViewData["Description"] = cleanSummary;
 }
 
 <div class="wrap" style="max-width: 1200px; margin: auto; padding: 40px 24px; min-height: 80vh;">
