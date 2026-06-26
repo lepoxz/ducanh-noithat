@@ -53,7 +53,7 @@ namespace noithat_ducanh.Pages.Admin
             HeroImage3 = settings.FirstOrDefault(s => s.Key == "HeroImage3")?.Value ?? "/images/hero-kitchen2.jpg";
 
             Hotline = settings.FirstOrDefault(s => s.Key == "Hotline")?.Value ?? "0773 12 1234";
-            Address = settings.FirstOrDefault(s => s.Key == "Address")?.Value ?? "Ông Bầu, Tỉnh Đồng Tháp";
+            Address = settings.FirstOrDefault(s => s.Key == "Address")?.Value ?? "41 Nguyễn Minh Trí, Mỹ Thọ, Đồng Tháp";
             Email = settings.FirstOrDefault(s => s.Key == "Email")?.Value ?? "noithatnhua.ducanh@gmail.com";
         }
 

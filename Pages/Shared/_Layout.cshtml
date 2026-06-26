@@ -3,7 +3,7 @@
 @{
     var settings = await DbContext.SystemSettings.ToListAsync();
     var hotline = settings.FirstOrDefault(s => s.Key == "Hotline")?.Value ?? "0773 12 1234";
-    var address = settings.FirstOrDefault(s => s.Key == "Address")?.Value ?? "Ông Bầu, Tỉnh Đồng Tháp";
+    var address = settings.FirstOrDefault(s => s.Key == "Address")?.Value ?? "41 Nguyễn Minh Trí, Mỹ Thọ, Đồng Tháp";
     var email = settings.FirstOrDefault(s => s.Key == "Email")?.Value ?? "noithatnhua.ducanh@gmail.com";
 
     var rawHotline = new string(hotline.Where(char.IsDigit).ToArray());
@@ -135,7 +135,7 @@
         </div>
       </div>
       <div class="footer-about">
-        <p>Chuyên thiết kế, sản xuất và lắp đặt nội thất nhựa cao cấp Đài Loan tại Hà Nội. Cam kết chất lượng, bền đẹp, hiện đại với giá cả hợp lý nhất thị trường.</p>
+        <p>Chuyên thiết kế, sản xuất và thi công trọn gói nội thất nhựa tại Đồng Tháp (Cao Lãnh, Sa Đéc, Hồng Ngự). Cam kết chất lượng, bền đẹp, hiện đại với giá cả hợp lý nhất thị trường.</p>
       </div>
       <div class="fcontact">
         <p><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> @address</p>

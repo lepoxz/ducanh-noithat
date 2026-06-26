@@ -219,9 +219,9 @@ namespace noithat_ducanh.Pages
             var posts = new List<Post>
             {
                 new() {
-                    Title = "Địa Điểm Mua Nội Thất Nhựa Uy Tín Tại Hà Nội",
-                    Summary = "Tìm nơi mua nội thất nhựa tại Hà Nội uy tín? Phân tích chi tiết vật liệu, ưu nhược điểm và lý do nên chọn Nội Thất Đức Anh.",
-                    Content = "Tìm nơi mua nội thất nhựa tại Hà Nội uy tín? Phân tích chi tiết vật liệu, ưu nhược điểm và lý do nên chọn Nội Thất Đức Anh.",
+                    Title = "Địa Điểm Mua Nội Thất Nhựa Uy Tín Tại Đồng Tháp",
+                    Summary = "Tìm nơi mua nội thất nhựa tại Đồng Tháp uy tín? Phân tích chi tiết vật liệu, ưu nhược điểm và lý do nên chọn Xưởng Nội Thất Đức Anh.",
+                    Content = "Tìm nơi mua nội thất nhựa tại Đồng Tháp uy tín? Phân tích chi tiết vật liệu, ưu nhược điểm và lý do nên chọn Xưởng Nội Thất Đức Anh.",
                     ImageUrl = "https://noithathaiminh.com.vn/uploads/news/dia-diem-mua-noi-that-nhua-uy-tin-tai-ha-noi.jpg"
                 },
                 new() {
